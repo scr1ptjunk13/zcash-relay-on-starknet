@@ -1,52 +1,35 @@
 [package]
-name = "zcash_relay_on_starknet"
+name = "zcash_relay"
 version = "0.1.0"
 edition = "2024_07"
-
-# See more keys and their definitions at https://docs.swmansion.com/scarb/docs/reference/manifest.html
+description = "Relay for Zcash - Starknet smart contract for trustless Zcash verification"
+authors = ["Zypherpunk Hackathon Team"]
+license = "MIT"
 
 [dependencies]
-starknet = "2.13.1"
+starknet = "2.9.2"
+openzeppelin = "0.20.0"
+utils = { git = "https://github.com/keep-starknet-strange/raito.git", rev = "dc3d54e84118630efa5e7069eb5c414fd8fbae3f" }
 
 [dev-dependencies]
-snforge_std = "0.53.0-rc.0"
-assert_macros = "2.13.1"
-
-[[target.starknet-contract]]
-sierra = true
+snforge_std = { git = "https://github.com/foundry-rs/starknet-foundry.git", tag = "v0.53.0-rc.0" }
+assert_macros = "2.8.2"
 
 [scripts]
 test = "snforge test"
+fmt = "scarb fmt"
+lint = "scarb fmt --check"
 
-[tool.scarb]
-allow-prebuilt-plugins = ["snforge_std"]
+[[target.starknet-contract]]
+sierra = true
+casm = true
+allowed-libfuncs-list.name = "experimental"
 
-# Visit https://foundry-rs.github.io/starknet-foundry/appendix/scarb-toml.html for more information
+[lib]
+sierra = true
+casm = false
 
-# [tool.snforge]                                             # Define `snforge` tool section
-# exit_first = true                                          # Stop tests execution immediately upon the first failure
-# fuzzer_runs = 1234                                         # Number of runs of the random fuzzer
-# fuzzer_seed = 1111                                         # Seed for the random fuzzer
+[profile.dev.cairo]
+unstable-add-statements-functions-debug-info = true
+unstable-add-statements-code-locations-debug-info = true
 
-# [[tool.snforge.fork]]                                      # Used for fork testing
-# name = "SOME_NAME"                                         # Fork name
-# url = "http://your.rpc.url"                                # Url of the RPC provider
-# block_id.tag = "latest"                                    # Block to fork from (block tag)
-
-# [[tool.snforge.fork]]
-# name = "SOME_SECOND_NAME"
-# url = "http://your.second.rpc.url"                         
-# block_id.number = "123"                                    # Block to fork from (block number)
-
-# [[tool.snforge.fork]]
-# name = "SOME_THIRD_NAME"
-# url = "http://your.third.rpc.url"
-# block_id.hash = "0x123"                                    # Block to fork from (block hash)
-
-# [profile.dev.cairo]                                        # Configure Cairo compiler
-# unstable-add-statements-code-locations-debug-info = true   # Should be used if you want to use coverage
-# unstable-add-statements-functions-debug-info = true        # Should be used if you want to use coverage/profiler
-# inlining-strategy = "avoid"                                # Should be used if you want to use coverage
-
-# [features]                                                 # Used for conditional compilation
-# enable_for_tests = []                                      # Feature name and list of other features that should be enabled with it

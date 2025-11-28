@@ -1,5 +1,40 @@
-target
-.snfoundry_cache/
-snfoundry_trace/
+# Scarb
+target/
+Scarb.lock
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Build artifacts
+*.o
+*.a
+*.so
+*.dylib
+
+# Dependencies
+node_modules/
+.env
+.env.local
+
+# Test coverage
 coverage/
-profile/
+*.lcov
+
+# Temporary files
+*.tmp
+*.bak
+
+*.txt
