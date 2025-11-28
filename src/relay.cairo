@@ -1,7 +1,7 @@
-/// Utu Relay - Zcash block verification on Starknet
+/// Zcash Relay - Zcash block verification on Starknet
 
 #[starknet::contract]
-pub mod UtuRelay {
+pub mod ZcashRelay {
     use starknet::{ContractAddress, get_block_timestamp};
     use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess, StorageMapReadAccess, StorageMapWriteAccess};
     use openzeppelin::access::ownable::OwnableComponent;
@@ -208,7 +208,7 @@ pub mod UtuRelay {
     }
 
     #[abi(embed_v0)]
-    impl UtuRelayImpl of crate::interfaces::IUtuRelayZcash<ContractState> {
+    impl ZcashRelayImpl of crate::interfaces::IZcashRelay<ContractState> {
         fn initialize(ref self: ContractState, owner: ContractAddress) {
             if self.initialized.read() {
                 panic!("Already initialized");
@@ -718,7 +718,7 @@ pub mod UtuRelay {
     }
 
     // internal helpers
-    trait UtuRelayHelpersTrait {
+    trait ZcashRelayHelpersTrait {
         fn calculate_cumulative_pow_internal(self: @ContractState, start_block_hash: Digest, max_depth: u32) -> u256;
         fn find_fork_point_internal(self: @ContractState, block_hash_a: Digest, block_hash_b: Digest, max_depth: u32) -> Digest;
         fn get_block_ancestry_internal(self: @ContractState, start_block_hash: Digest, max_depth: u32) -> u32;
@@ -783,7 +783,7 @@ pub mod UtuRelay {
         *sorted[count / 2]
     }
 
-    impl UtuRelayHelpers of UtuRelayHelpersTrait {
+    impl ZcashRelayHelpers of ZcashRelayHelpersTrait {
         /// Gets previous N block timestamps from canonical chain
         fn get_previous_timestamps(
             self: @ContractState,

@@ -1,4 +1,4 @@
-use crate::interfaces::{IUtuRelayZcashDispatcher, IUtuRelayZcashDispatcherTrait};
+use crate::interfaces::{IZcashRelayDispatcher, IZcashRelayDispatcherTrait};
 use snforge_std::{declare, ContractClassTrait, DeclareResultTrait};
 use crate::utils::hash::Digest;
 use crate::zcash::status::BlockStatus;
@@ -20,13 +20,13 @@ pub impl DigestIntoSpan of Into<Digest, Span<felt252>> {
     }
 }
 
-/// Deploy UtuRelay contract and return dispatcher
-pub fn deploy_utu() -> IUtuRelayZcashDispatcher {
-    let contract = declare("UtuRelay").unwrap().contract_class();
+/// Deploy ZcashRelay contract and return dispatcher
+pub fn deploy_relay() -> IZcashRelayDispatcher {
+    let contract = declare("ZcashRelay").unwrap().contract_class();
     
     // Deploy with empty constructor
     let (contract_address, _) = contract.deploy(@ArrayTrait::new()).unwrap();
-    let dispatcher = IUtuRelayZcashDispatcher { contract_address };
+    let dispatcher = IZcashRelayDispatcher { contract_address };
     
     // Initialize the contract with owner (use the contract's own address as owner for testing)
     dispatcher.initialize(contract_address);

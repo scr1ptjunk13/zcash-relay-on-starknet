@@ -9,7 +9,7 @@ use crate::utils::hash::Digest as HeightProof;  // TODO: Define proper HeightPro
 use crate::errors::RelayError;
 
 #[starknet::interface]
-pub trait IUtuRelayZcash<TContractState> {
+pub trait IZcashRelay<TContractState> {
     fn initialize(ref self: TContractState, owner: ContractAddress);
 
     // INCREMENTAL BLOCK VERIFICATION

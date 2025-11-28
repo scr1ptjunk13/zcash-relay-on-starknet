@@ -1,4 +1,4 @@
-/// Utu Relay for Zcash - Starknet Smart Contract
+/// Zcash Relay - Starknet Smart Contract
 /// 
 /// Trustless verification of Zcash block headers on Starknet.
 /// Verifies proof-of-work, chain continuity, and maintains canonical chain.

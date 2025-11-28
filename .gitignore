@@ -1,6 +1,11 @@
-# Scarb
+# Project-specific
+docs/
 target/
 Scarb.lock
+TESTNET_ACCOUNT.txt
+
+# Scarb
+.scarb/
 
 # IDE
 .vscode/
@@ -36,5 +41,3 @@ coverage/
 # Temporary files
 *.tmp
 *.bak
-
-TESTNET_ACCOUNT.txt

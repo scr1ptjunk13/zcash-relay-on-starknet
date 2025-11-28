@@ -1,13 +1,13 @@
 use snforge_std::{start_cheat_block_timestamp, stop_cheat_block_timestamp};
-use crate::tests::utils::deploy_utu;
+use crate::tests::utils::deploy_relay;
 use crate::zcash::block::ZcashBlockHeader;
 use crate::utils::hex::{hex_to_bytes_array, hex_to_hash};
 use crate::utils::hash::Digest;
-use crate::interfaces::IUtuRelayZcashDispatcherTrait;
+use crate::interfaces::IZcashRelayDispatcherTrait;
 
 // Helper function to verify a block through the full incremental process
 fn verify_block_incremental(
-    utu: @crate::interfaces::IUtuRelayZcashDispatcher,
+    utu: @crate::interfaces::IZcashRelayDispatcher,
     block: ZcashBlockHeader,
     block_name: ByteArray
 ) -> Digest {
@@ -56,7 +56,7 @@ fn verify_block_incremental(
 // ============================================================================
 #[test]
 fn test_incremental_equihash_verification() {
-    let utu = deploy_utu();
+    let utu = deploy_relay();
     
     // ========================================================================
     // BLOCK 0: Genesis Block
@@ -220,7 +220,7 @@ fn test_incremental_equihash_verification() {
 #[test]
 #[ignore]  // Enable once we add helper functions
 fn test_full_incremental_verification_end_to_end() {
-    let utu = deploy_utu();
+    let utu = deploy_relay();
     let timestamp: u32 = 1477641360;
     start_cheat_block_timestamp(utu.contract_address, timestamp.into());
     
