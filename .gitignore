@@ -34,6 +34,10 @@ node_modules/
 .env
 .env.local
 
+# Frontend
+frontend/dist/
+frontend/.vite/
+
 # Test coverage
 coverage/
 *.lcov
@@ -41,3 +45,5 @@ coverage/
 # Temporary files
 *.tmp
 *.bak
+
+*.md
