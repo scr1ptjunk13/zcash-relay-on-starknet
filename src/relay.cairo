@@ -994,7 +994,7 @@ pub mod UtuRelay {
     ) {
         // Clear verification metadata (triggers gas refund)
         self.verification_headers.write(verification_id, 0);
-        self.verification_initiators.write(verification_id, starknet::contract_address_const::<0>());
+        self.verification_initiators.write(verification_id, 0_felt252.try_into().unwrap());
         self.verification_deadlines.write(verification_id, 0);
         self.verification_batches.write(verification_id, 0);
         self.verification_targets.write(verification_id, 0);

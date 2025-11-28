@@ -8,7 +8,7 @@
 /// > verify tree levels: combine nodes level-by-level
 /// > finalize: check root and difficulty
 
-use crate::zcash::equihash::{make_leaf, make_leaves_batch_optimized, from_children, has_collision, indices_before, distinct_indices, EquihashNode};
+use crate::zcash::equihash::{make_leaves_batch_optimized, from_children, has_collision, indices_before, distinct_indices, EquihashNode};
 use crate::zcash::block::ZcashBlockHeader;
 use crate::utils::hash::Digest;
 use crate::utils::bit_shifts::{shl_u64, shr_u64};

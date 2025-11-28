@@ -19,7 +19,7 @@ import sys
 import argparse
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent))
-from script import fetch_block_header
+from fetch import fetch_block_header
 
 def digest_to_calldata(digest_dict):
     """Convert Digest to calldata: 8 u32 values as felts (no length prefix for fixed array)"""

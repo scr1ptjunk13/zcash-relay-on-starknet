@@ -8,7 +8,7 @@ import sys
 import argparse
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent))
-from script import fetch_block_header
+from fetch import fetch_block_header
 
 
 def compute_verification_id_from_block_hash(block_hash_hex: str) -> int:

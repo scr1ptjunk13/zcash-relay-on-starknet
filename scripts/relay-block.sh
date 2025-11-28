@@ -61,12 +61,12 @@ cd "$SCRIPT_DIR/.."
 
 # Fetch block
 echo -n "Fetching block $BLOCK... "
-HEADER=$(python scripts/format_block_calldata.py $BLOCK -v 2>/dev/null)
+HEADER=$(python scripts/format-block-calldata.py $BLOCK -v 2>/dev/null)
 [ -z "$HEADER" ] && { echo -e "${RED}failed${NC}"; exit 1; }
 echo "ok ($(echo $HEADER | wc -w) felts)"
 
 # Get verification ID
-VID=$(python scripts/compute_verification_id.py $BLOCK 2>/dev/null)
+VID=$(python scripts/compute-verification-id.py $BLOCK 2>/dev/null)
 [ -z "$VID" ] && { echo -e "${RED}Failed to compute verification_id${NC}"; exit 1; }
 echo "Verification ID: $VID"
 echo ""
