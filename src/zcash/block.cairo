@@ -2,6 +2,8 @@
 //!
 //! The header is 140 bytes fixed + a 1344-byte Equihash(200,9) solution.
 
+use crate::utils::hash::Digest;
+use crate::utils::double_sha256::double_sha256_block_header;
 
 /// NU5 spec
 /// refer : https://zips.z.cash/protocol/protocol.pdf 

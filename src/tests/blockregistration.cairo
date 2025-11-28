@@ -4,8 +4,8 @@ use crate::zcash::block::ZcashBlockHeader;
 use crate::utils::hex::{hex_to_bytes_array, hex_to_hash};
 use crate::utils::hash::Digest;
 use crate::interfaces::IUtuRelayZcashDispatcherTrait;
-use crate::zcash::incremental_verification;
-use crate::zcash::_equihash::indices_from_minimal_bytes;
+use crate::zcash::verification;
+use crate::zcash::equihash::indices_from_minimal_bytes;
 use crate::utils::numeric::u256_to_u32x8;
 
 // Helper function to verify a block through the full incremental process

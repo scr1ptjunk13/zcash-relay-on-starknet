@@ -15,8 +15,8 @@ pub mod UtuRelay {
     use crate::errors::RelayError;
     use crate::utils::double_sha256::double_sha256_block_header;
     use core::num::traits::zero::Zero;
-    use crate::zcash::incremental_verification;
-    use crate::zcash::_equihash::{indices_from_minimal_bytes, EquihashNode, is_zero_prefix, collision_byte_length};
+    use crate::zcash::verification;
+    use crate::zcash::equihash::{indices_from_minimal_bytes, EquihashNode, is_zero_prefix, collision_byte_length};
     use core::poseidon::poseidon_hash_span;
     use crate::utils::bit_shifts::pow2;
     use crate::utils::numeric::u256_to_u32x8;
@@ -251,13 +251,13 @@ pub mod UtuRelay {
             if block_hash_u256 > target { panic!("Invalid PoW: hash > target"); }
 
             let initiator = starknet::get_caller_address();
-            let verification_id = incremental_verification::compute_verification_id_from_hash(block_hash);
+            let verification_id = verification::compute_verification_id_from_hash(block_hash);
             
             let solution_array = span_to_array(header.n_solution);
             let (ok, indices) = indices_from_minimal_bytes(200, 9, solution_array);
             assert(ok, 'Failed to decode solution');
             
-            let header_bytes = incremental_verification::serialize_header_140(header);
+            let header_bytes = verification::serialize_header_140(header);
             let mut header_data = array![];
             let mut i = 0;
             while i < header_bytes.len() {
@@ -310,7 +310,7 @@ pub mod UtuRelay {
             };
             
             // nonce must be included for correct blake2b
-            let mut header_with_nonce = incremental_verification::serialize_header_140(header);
+            let mut header_with_nonce = verification::serialize_header_140(header);
             
             // Append nonce (32 bytes in little-endian)
             let nonce_u32s = u256_to_u32x8(header.n_nonce);
@@ -326,7 +326,7 @@ pub mod UtuRelay {
                 k += 1;
             };
             
-            let nodes = incremental_verification::verify_leaf_batch(
+            let nodes = verification::verify_leaf_batch(
                 batch_id,
                 header_with_nonce,
                 indices.span()
@@ -340,7 +340,7 @@ pub mod UtuRelay {
                 let leaf_idx = start_leaf_idx + j;
                 let node = nodes[j.try_into().unwrap()];
                 
-                let (c0, c1, c2, c3, hash_len) = incremental_verification::hash_to_u64x4(node.hash);
+                let (c0, c1, c2, c3, hash_len) = verification::hash_to_u64x4(node.hash);
                 
                 self.verification_leaf_c0.write((verification_id, leaf_idx), c0);
                 self.verification_leaf_c1.write((verification_id, leaf_idx), c1);
@@ -371,7 +371,7 @@ pub mod UtuRelay {
                 let c2 = self.verification_leaf_c2.read((verification_id, idx));
                 let c3 = self.verification_leaf_c3.read((verification_id, idx));
                 let hash_len = self.verification_leaf_len.read((verification_id, idx));
-                let hash = incremental_verification::u64x4_to_hash(c0, c1, c2, c3, hash_len);
+                let hash = verification::u64x4_to_hash(c0, c1, c2, c3, hash_len);
                 let solution_idx = self.verification_indices.read((verification_id, idx));
                 let mut indices = array![];
                 indices.append(solution_idx);
@@ -380,14 +380,14 @@ pub mod UtuRelay {
             };
 
             let collision_bytes = collision_byte_length(200, 9);
-            let root_node = incremental_verification::build_subtree_recursive(
+            let root_node = verification::build_subtree_recursive(
                 leaves.span(),
                 0,
                 leaves.len(),
                 collision_bytes
             );
 
-            let (root_c0, root_c1, root_c2, root_c3, root_hash_len) = incremental_verification::hash_to_u64x4(@root_node.hash);
+            let (root_c0, root_c1, root_c2, root_c3, root_hash_len) = verification::hash_to_u64x4(@root_node.hash);
             self.verification_root_c0.write(verification_id, root_c0);
             self.verification_root_c1.write(verification_id, root_c1);
             self.verification_root_c2.write(verification_id, root_c2);
@@ -407,7 +407,7 @@ pub mod UtuRelay {
             let root_c2 = self.verification_root_c2.read(verification_id);
             let root_c3 = self.verification_root_c3.read(verification_id);
             let root_hash_len = self.verification_root_len.read(verification_id);
-            let root_hash = incremental_verification::u64x4_to_hash(root_c0, root_c1, root_c2, root_c3, root_hash_len);
+            let root_hash = verification::u64x4_to_hash(root_c0, root_c1, root_c2, root_c3, root_hash_len);
             let root_node = EquihashNode { hash: root_hash, indices: array![] };
             
             let collision_bytes = collision_byte_length(200, 9);
@@ -481,7 +481,8 @@ pub mod UtuRelay {
             ref self: ContractState,
             begin_height: u64,
             end_height: u64,
-            end_block_hash: Digest
+            end_block_hash: Digest,
+            height_proof: Option<Digest>  // TODO: Use proper HeightProof type
         ) -> Result<(), RelayError> {
             if !validate_height_range(begin_height, end_height) {
                 return Result::Err(RelayError::InvalidHeightRange);

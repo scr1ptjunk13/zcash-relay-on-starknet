@@ -5,7 +5,7 @@
 use core::array::ArrayTrait;
 use core::traits::{Into, TryInto};
 use crate::utils::hash::Digest;
-use crate::utils::_blake2b::blake2b_hash;
+use crate::utils::blake2b::blake2b_hash;
 use crate::utils::bit_shifts::{shr_u64 as shr64, shl_u64 as shl64, shl_u128, pow2};
 
 // Equihash constants for Zcash

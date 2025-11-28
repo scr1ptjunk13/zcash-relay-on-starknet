@@ -4,11 +4,12 @@
 
 use starknet::ContractAddress;
 use crate::utils::hash::Digest;
-use crate::zcash::{block::ZcashBlockHeader, status::BlockStatus, proof::HeightProof};
+use crate::zcash::{block::ZcashBlockHeader, status::BlockStatus};
+use crate::utils::hash::Digest as HeightProof;  // TODO: Define proper HeightProof type
 use crate::errors::RelayError;
 
 #[starknet::interface]
-pub trait IRelayZcash<TContractState> {
+pub trait IUtuRelayZcash<TContractState> {
     fn initialize(ref self: TContractState, owner: ContractAddress);
 
     // INCREMENTAL BLOCK VERIFICATION
