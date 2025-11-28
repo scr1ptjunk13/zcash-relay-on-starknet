@@ -3,7 +3,7 @@
 //! Typed errors for external callers to handle failures gracefully.
 
 #[derive(Drop, Debug, Serde)]
-pub enum UtuRelayError {
+pub enum RelayError {
     InvalidDifficultyTarget,
     InvalidMerkleProof,
     InvalidTimestamp,
