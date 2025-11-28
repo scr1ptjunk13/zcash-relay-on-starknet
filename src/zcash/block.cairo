@@ -42,3 +42,22 @@ pub impl ZcashBlockHeaderImpl of ZcashBlockHeaderTrait {
         }
     }
 }
+
+/// block hash calculation
+#[generate_trait]
+pub impl ZcashBlockHeaderHashImpl of ZcashBlockHeaderHashTrait {
+    /// calculates block hash: double-SHA256(header || solution)
+    /// note : hash fields are serialized as big-endian bytes, integers as little-endian.
+    fn hash(self: @ZcashBlockHeader) -> Digest {
+        double_sha256_block_header(
+            *self.n_version,
+            self.hash_prev_block,
+            self.hash_merkle_root,
+            self.hash_block_commitments,
+            *self.n_time,
+            *self.n_bits,
+            *self.n_nonce,
+            *self.n_solution,
+        )
+    }
+}
