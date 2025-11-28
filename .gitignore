@@ -37,4 +37,4 @@ coverage/
 *.tmp
 *.bak
 
-*.txt
+TESTNET_ACCOUNT.txt
