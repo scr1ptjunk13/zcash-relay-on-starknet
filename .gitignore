@@ -1,13 +1,13 @@
-# Project-specific
+## Project-specific
 docs/
 target/
 Scarb.lock
-# TESTNET_ACCOUNT.txt
+TESTNET_ACCOUNT.txt
 
-# Scarb
+## Scarb
 .scarb/
 
-# IDE
+## IDE
 .vscode/
 .idea/
 *.swp
@@ -15,35 +15,35 @@ Scarb.lock
 *~
 .DS_Store
 
-# OS
+## OS
 .DS_Store
 Thumbs.db
 
-# Logs
+## Logs
 *.log
 logs/
 
-# Build artifacts
+## Build artifacts
 *.o
 *.a
 *.so
 *.dylib
 
-# Dependencies
+## Dependencies
 node_modules/
 .env
 .env.local
 
-# Frontend
-frontend/dist/
-frontend/.vite/
+## Frontend
+# frontend/dist/
+# frontend/.vite/
 
-# Test coverage
-coverage/
-*.lcov
+# # Test coverage
+# coverage/
+# *.lcov
 
-# Temporary files
+# # Temporary files
 *.tmp
 *.bak
 
-*.md
+.md
