@@ -1,24 +1,23 @@
 import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/StatCard";
 import { BlockRow } from "@/components/BlockRow";
-import { ArrowRight, Activity, Database, Zap, DollarSign } from "lucide-react";
+import { ArrowRight, Activity, Database, Zap, DollarSign, AlertCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useFormattedStats } from "@/hooks/useRelayStats";
+import { useRecentBlocks } from "@/hooks/useRelayContract";
+import { useStarknet, formatTimeAgo } from "@/lib/starknet";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const Home = () => {
-  // Mock data - in real app, fetch from contract
-  const stats = [
-    { label: "Current Height", value: "2,847,123", icon: Activity },
-    { label: "Blocks Verified", value: "147", icon: Database },
-    { label: "Total PoW", value: "4.2M", icon: Zap },
-    { label: "Avg Cost", value: "0.003 ETH", icon: DollarSign },
-  ];
+  const { isConfigured } = useStarknet();
+  const { stats, isLoading: statsLoading } = useFormattedStats();
+  const { data: recentBlocks, isLoading: blocksLoading } = useRecentBlocks(5);
 
-  const recentBlocks = [
-    { height: 2847123, hash: "0x1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b", timestamp: "2 min ago", status: "finalized" as const },
-    { height: 2847122, hash: "0x2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c", timestamp: "5 min ago", status: "finalized" as const },
-    { height: 2847121, hash: "0x3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d", timestamp: "8 min ago", status: "confirming" as const },
-    { height: 2847120, hash: "0x4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e", timestamp: "11 min ago", status: "finalized" as const },
-    { height: 2847119, hash: "0x5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f", timestamp: "14 min ago", status: "finalized" as const },
+  const statCards = [
+    { label: "Current Height", value: stats.currentHeight, icon: Activity },
+    { label: "Blocks Verified", value: stats.blocksVerified, icon: Database },
+    { label: "Total PoW", value: stats.totalPow, icon: Zap },
+    { label: "Avg Cost", value: stats.avgCost, icon: DollarSign },
   ];
 
   return (
@@ -40,15 +39,29 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Contract Not Configured Warning */}
+      {!isConfigured && (
+        <section className="px-4 pb-4">
+          <div className="container mx-auto max-w-5xl">
+            <Alert variant="default" className="border-yellow-500/50 bg-yellow-500/10">
+              <AlertCircle className="h-4 w-4 text-yellow-500" />
+              <AlertDescription className="text-yellow-200">
+                Contract not configured. Set <code className="bg-muted px-1 rounded">VITE_RELAY_CONTRACT_ADDRESS</code> in your environment to connect to a deployed relay.
+              </AlertDescription>
+            </Alert>
+          </div>
+        </section>
+      )}
+
       {/* Stats Section */}
       <section className="py-12 px-4">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {stats.map((stat) => (
+            {statCards.map((stat) => (
               <StatCard
                 key={stat.label}
                 label={stat.label}
-                value={stat.value}
+                value={statsLoading ? "..." : stat.value}
                 icon={stat.icon}
               />
             ))}
@@ -69,9 +82,25 @@ const Home = () => {
           </div>
           
           <div className="space-y-2">
-            {recentBlocks.map((block) => (
-              <BlockRow key={block.height} {...block} />
-            ))}
+            {blocksLoading ? (
+              <div className="text-center py-8 text-muted-foreground">
+                Loading blocks...
+              </div>
+            ) : !recentBlocks || recentBlocks.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">
+                {isConfigured ? "No verified blocks yet" : "Connect contract to view blocks"}
+              </div>
+            ) : (
+              recentBlocks.map((block) => (
+                <BlockRow
+                  key={block.height}
+                  height={block.height}
+                  hash={block.hash}
+                  timestamp={block.registrationTimestamp ? formatTimeAgo(block.registrationTimestamp) : "—"}
+                  status={block.status}
+                />
+              ))
+            )}
           </div>
         </div>
       </section>

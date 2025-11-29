@@ -1,106 +1,220 @@
 #!/bin/bash
-# Zcash block relay - usage: ./relay_block.sh <block> [--resume]
+# Zcash Block Relay - Verifies Zcash blocks on Starknet
+# Usage: ./relay-block.sh <height> [--resume]
+# Automatically relays all blocks from current chain height to target
 
 set +e
 set +H
 
+# Config
 MAX_RETRIES=5
 RETRY_DELAY=10
 BATCH_DELAY=8
+TOTAL_TXS=19
 
-GREEN='\033[0;32m'
+# Colors
 RED='\033[0;31m'
-YELLOW='\033[1;33m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+BOLD='\033[1m'
+DIM='\033[2m'
 NC='\033[0m'
 
-[ -z "$1" ] && { echo "Usage: $0 <block_number> [--resume]"; exit 1; }
-
-BLOCK=$1
-RESUME=false
-[ "$2" = "--resume" ] && RESUME=true
-
-CONTRACT="0x037f98ffad155b2534be9e38e77c40a0d5d49044b6781a2ca5e3248c0b9968ba"
+# Contract config
+CONTRACT="0x05dba82c62d5f37161581bc0380eb98cf2a401d84e4fc5c5eb27000bf2b52ce5"
 ACCOUNT="testnet_account"
 NETWORK="sepolia"
 
+[ -z "$1" ] && { echo -e "${RED}Usage:${NC} $0 <target_height> [--resume]"; exit 1; }
+
+TARGET=$1
+RESUME=false
+[ "$2" = "--resume" ] && RESUME=true
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-STATE_FILE="$SCRIPT_DIR/.relay_state_${BLOCK}"
-
-# Timing
-START_TIME=$(date +%s)
-TX_COUNT=0
-
-echo ""
-echo "Relaying block $BLOCK to $NETWORK"
-echo ""
+cd "$SCRIPT_DIR/.."
 
 # Invoke with retry
 invoke() {
-    local func=$1 calldata=$2 desc=$3 attempt=1
+    local func=$1 calldata=$2 step=$3 desc=$4 block=$5 attempt=1
+    local step_start=$(date +%s)
+    
     while [ $attempt -le $MAX_RETRIES ]; do
         output=$(sncast --account $ACCOUNT invoke --contract-address $CONTRACT --function $func --calldata $calldata --network $NETWORK 2>&1)
+        
         if echo "$output" | grep -q "Transaction Hash:"; then
             tx=$(echo "$output" | grep -oP 'Transaction Hash: \K0x[a-f0-9]+' | head -1)
-            echo -e "${GREEN}$desc${NC} $tx"
-            ((TX_COUNT++))
+            local step_end=$(date +%s)
+            local step_time=$((step_end - step_start))
+            echo -e "${GREEN}[TX $step/$TOTAL_TXS]${NC} $desc ${DIM}(${step_time}s)${NC}"
+            echo -e "         ${DIM}${tx:0:18}...${tx: -8}${NC}"
             return 0
         fi
-        echo "$output" | grep -qi "already\|duplicate" && { echo -e "${YELLOW}$desc (skipped)${NC}"; return 0; }
-        echo -e "${YELLOW}$desc retry $attempt/$MAX_RETRIES${NC}"
+        
+        if echo "$output" | grep -qi "already\|duplicate"; then
+            echo -e "${YELLOW}[TX $step/$TOTAL_TXS]${NC} $desc ${DIM}(skipped)${NC}"
+            return 0
+        fi
+        
+        echo -e "${YELLOW}[TX $step/$TOTAL_TXS]${NC} $desc - retry $attempt/$MAX_RETRIES"
         sleep $RETRY_DELAY
         ((attempt++))
     done
-    echo -e "${RED}$desc FAILED${NC}"
+    
+    echo -e "${RED}[TX $step/$TOTAL_TXS]${NC} $desc ${RED}FAILED${NC}"
     return 1
 }
 
-save_state() { echo "$1" > "$STATE_FILE"; echo "VID=$VID" >> "$STATE_FILE"; }
-load_state() { [ -f "$STATE_FILE" ] && { head -1 "$STATE_FILE"; source "$STATE_FILE" 2>/dev/null; } || echo "0"; }
-
-cd "$SCRIPT_DIR/.."
-
-# Fetch block
-echo -n "Fetching block $BLOCK... "
-HEADER=$(python scripts/format-block-calldata.py $BLOCK -v 2>/dev/null)
-[ -z "$HEADER" ] && { echo -e "${RED}failed${NC}"; exit 1; }
-echo "ok ($(echo $HEADER | wc -w) felts)"
-
-# Get verification ID
-VID=$(python scripts/compute-verification-id.py $BLOCK 2>/dev/null)
-[ -z "$VID" ] && { echo -e "${RED}Failed to compute verification_id${NC}"; exit 1; }
-echo "Verification ID: $VID"
-echo ""
-
-LAST=0
-[ "$RESUME" = true ] && [ -f "$STATE_FILE" ] && { LAST=$(load_state); echo "Resuming from step $((LAST+1))"; }
-
-# TX1: Start
-[ $LAST -lt 1 ] && { invoke "start_block_verification" "$HEADER" "1/19 start" || exit 1; save_state 1; sleep 12; }
-
-# TX2-17: Batches
-FAILED=()
-for i in {0..15}; do
-    step=$((i+2))
-    [ $LAST -lt $step ] && {
-        invoke "verify_leaves_batch" "$VID $i $HEADER" "$((i+2))/19 batch $i" && save_state $step || FAILED+=($i)
+# Relay a single block
+relay_single_block() {
+    local BLOCK=$1
+    local STATE_FILE="$SCRIPT_DIR/.relay_state_${BLOCK}"
+    local BLOCK_START=$(date +%s)
+    
+    echo ""
+    echo -e "${BOLD}${CYAN}Block $BLOCK${NC}"
+    echo -e "${DIM}─────────────────────────────────────${NC}"
+    
+    # Check if already verified
+    BLOCK_HASH=$(sncast --account $ACCOUNT call --contract-address $CONTRACT --function get_block --calldata $BLOCK --network $NETWORK 2>&1)
+    if echo "$BLOCK_HASH" | grep -qE '0x[1-9a-f]'; then
+        echo -e "${GREEN}[SKIP]${NC} Already verified"
+        return 0
+    fi
+    
+    # Fetch block data
+    echo -e "${BLUE}[FETCH]${NC} Fetching from Zcash..."
+    HEADER=$(python scripts/format-block-calldata.py $BLOCK -v 2>/dev/null)
+    if [ -z "$HEADER" ]; then
+        echo -e "${RED}[ERROR]${NC} Failed to fetch block data"
+        return 1
+    fi
+    
+    # Compute verification ID
+    VID=$(python scripts/compute-verification-id.py $BLOCK 2>/dev/null)
+    if [ -z "$VID" ]; then
+        echo -e "${RED}[ERROR]${NC} Failed to compute verification ID"
+        return 1
+    fi
+    echo -e "${BLUE}[FETCH]${NC} VID: ${VID:0:18}..."
+    
+    # Resume check
+    LAST=0
+    if [ "$RESUME" = true ] && [ -f "$STATE_FILE" ]; then
+        LAST=$(head -1 "$STATE_FILE")
+        source "$STATE_FILE" 2>/dev/null
+        echo -e "${YELLOW}[RESUME]${NC} From TX $((LAST+1))"
+    fi
+    
+    save_state() { echo "$1" > "$STATE_FILE"; echo "VID=$VID" >> "$STATE_FILE"; }
+    
+    # TX 1: Start
+    if [ $LAST -lt 1 ]; then
+        invoke "start_block_verification" "$HEADER" "1" "start" $BLOCK || return 1
+        save_state 1
+        sleep 12
+    fi
+    
+    # TX 2-17: Batches
+    FAILED=()
+    for i in {0..15}; do
+        step=$((i+2))
+        if [ $LAST -lt $step ]; then
+            if invoke "verify_leaves_batch" "$VID $i $HEADER" "$step" "batch[$i]" $BLOCK; then
+                save_state $step
+            else
+                FAILED+=($i)
+            fi
+            sleep $BATCH_DELAY
+        fi
+    done
+    
+    # Retry failed
+    for i in "${FAILED[@]}"; do
+        step=$((i+2))
+        if ! invoke "verify_leaves_batch" "$VID $i $HEADER" "$step" "batch[$i] retry" $BLOCK; then
+            echo -e "${RED}[ERROR]${NC} Batch $i failed. Use --resume"
+            return 1
+        fi
+        save_state $step
         sleep $BATCH_DELAY
-    }
+    done
+    
+    # TX 18: Tree
+    if [ $LAST -lt 18 ]; then
+        invoke "verify_tree_all_levels" "$VID $HEADER" "18" "tree" $BLOCK || return 1
+        save_state 18
+        sleep 12
+    fi
+    
+    # TX 19: Finalize
+    if [ $LAST -lt 19 ]; then
+        invoke "finalize_block_verification" "$VID $HEADER" "19" "finalize" $BLOCK || return 1
+        save_state 19
+    fi
+    
+    rm -f "$STATE_FILE"
+    
+    local BLOCK_END=$(date +%s)
+    local BLOCK_TIME=$((BLOCK_END - BLOCK_START))
+    local MINS=$((BLOCK_TIME / 60))
+    local SECS=$((BLOCK_TIME % 60))
+    echo -e "${GREEN}[DONE]${NC} Block $BLOCK verified ${DIM}(${MINS}m ${SECS}s)${NC}"
+    
+    return 0
+}
+
+# Main
+echo ""
+echo -e "${BOLD}${CYAN}ZCASH RELAY${NC}"
+echo -e "${DIM}Target: Block $TARGET | Network: $NETWORK${NC}"
+echo -e "${DIM}Contract: ${CONTRACT:0:10}...${CONTRACT: -8}${NC}"
+
+# Get current chain height
+echo -e "${BLUE}[CHECK]${NC} Getting current chain height..."
+CHAIN_HEIGHT_HEX=$(sncast --account $ACCOUNT call --contract-address $CONTRACT --function get_chain_height --network $NETWORK 2>&1 | grep -oP '0x[a-f0-9]+' | head -1)
+
+# Determine starting block
+if [ -z "$CHAIN_HEIGHT_HEX" ] || [ "$CHAIN_HEIGHT_HEX" = "0x0" ]; then
+    # Check if genesis exists
+    GENESIS_HASH=$(sncast --account $ACCOUNT call --contract-address $CONTRACT --function get_block --calldata 0 --network $NETWORK 2>&1)
+    if echo "$GENESIS_HASH" | grep -qE '0x[1-9a-f]'; then
+        START_BLOCK=1
+        echo -e "${BLUE}[CHECK]${NC} Genesis verified, chain height: 0"
+    else
+        START_BLOCK=0
+        echo -e "${BLUE}[CHECK]${NC} No blocks verified yet"
+    fi
+else
+    CURRENT_HEIGHT=$((CHAIN_HEIGHT_HEX))
+    START_BLOCK=$((CURRENT_HEIGHT + 1))
+    echo -e "${BLUE}[CHECK]${NC} Chain height: $CURRENT_HEIGHT"
+fi
+
+# Check if target already reached
+if [ $START_BLOCK -gt $TARGET ]; then
+    echo -e "${GREEN}[DONE]${NC} Block $TARGET already verified"
+    echo ""
+    exit 0
+fi
+
+TOTAL_BLOCKS=$((TARGET - START_BLOCK + 1))
+echo -e "${BLUE}[INFO]${NC} Relaying blocks $START_BLOCK to $TARGET ($TOTAL_BLOCKS blocks)"
+
+START_TIME=$(date +%s)
+BLOCKS_DONE=0
+
+# Relay each block sequentially
+for ((BLOCK=START_BLOCK; BLOCK<=TARGET; BLOCK++)); do
+    if relay_single_block $BLOCK; then
+        ((BLOCKS_DONE++))
+    else
+        echo -e "${RED}[ERROR]${NC} Failed at block $BLOCK"
+        exit 1
+    fi
 done
-
-# Retry failed
-for i in "${FAILED[@]}"; do
-    invoke "verify_leaves_batch" "$VID $i $HEADER" "$((i+2))/19 batch $i (retry)" || { echo "Batch $i failed. Use --resume"; exit 1; }
-    save_state $((i+2))
-    sleep $BATCH_DELAY
-done
-
-# TX18: Tree
-[ $LAST -lt 18 ] && { invoke "verify_tree_all_levels" "$VID $HEADER" "18/19 tree" || exit 1; save_state 18; sleep 12; }
-
-# TX19: Finalize
-[ $LAST -lt 19 ] && { invoke "finalize_block_verification" "$VID $HEADER" "19/19 finalize" || exit 1; save_state 19; }
-
-rm -f "$STATE_FILE"
 
 END_TIME=$(date +%s)
 ELAPSED=$((END_TIME - START_TIME))
@@ -108,6 +222,7 @@ MINS=$((ELAPSED / 60))
 SECS=$((ELAPSED % 60))
 
 echo ""
-echo -e "${GREEN}Block $BLOCK relayed successfully${NC}"
-echo "Time: ${MINS}m ${SECS}s | TXs: $TX_COUNT"
-echo "https://sepolia.starkscan.co/contract/$CONTRACT"
+echo -e "${GREEN}${BOLD}SUCCESS${NC} Relayed $BLOCKS_DONE blocks (up to #$TARGET)"
+echo -e "${DIM}Total time: ${MINS}m ${SECS}s${NC}"
+echo -e "${DIM}https://sepolia.starkscan.co/contract/$CONTRACT${NC}"
+echo ""

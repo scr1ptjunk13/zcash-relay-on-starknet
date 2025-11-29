@@ -2,7 +2,7 @@
 docs/
 target/
 Scarb.lock
-TESTNET_ACCOUNT.txt
+# TESTNET_ACCOUNT.txt
 
 # Scarb
 .scarb/

@@ -7,7 +7,7 @@ interface BlockRowProps {
   height: number;
   hash: string;
   timestamp: string;
-  status: "finalized" | "confirming" | "pending";
+  status: "finalized" | "verified" | "pending";
 }
 
 const truncateHash = (hash: string) => {
@@ -52,7 +52,7 @@ export const BlockRow = ({ height, hash, timestamp, status }: BlockRowProps) => 
         </div>
 
         <div className="col-span-2 flex items-center justify-between">
-          <span className={`text-xs ${status === 'finalized' ? 'text-success' : status === 'confirming' ? 'text-warning' : 'text-muted-foreground'}`}>
+          <span className={`text-xs ${status === 'finalized' ? 'text-success' : status === 'verified' ? 'text-primary' : 'text-muted-foreground'}`}>
             {status}
           </span>
           <ArrowRight className="w-4 h-4 text-muted-foreground/30" />

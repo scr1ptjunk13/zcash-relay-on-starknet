@@ -1,0 +1,914 @@
+[
+  {
+    "type": "impl",
+    "name": "ZcashRelayImpl",
+    "interface_name": "zcash_relay::interfaces::IZcashRelay"
+  },
+  {
+    "type": "struct",
+    "name": "zcash_relay::utils::hash::Digest",
+    "members": [
+      {
+        "name": "value",
+        "type": "[core::integer::u32; 8]"
+      }
+    ]
+  },
+  {
+    "type": "struct",
+    "name": "core::integer::u256",
+    "members": [
+      {
+        "name": "low",
+        "type": "core::integer::u128"
+      },
+      {
+        "name": "high",
+        "type": "core::integer::u128"
+      }
+    ]
+  },
+  {
+    "type": "struct",
+    "name": "core::array::Span::<core::integer::u8>",
+    "members": [
+      {
+        "name": "snapshot",
+        "type": "@core::array::Array::<core::integer::u8>"
+      }
+    ]
+  },
+  {
+    "type": "struct",
+    "name": "zcash_relay::zcash::block::ZcashBlockHeader",
+    "members": [
+      {
+        "name": "n_version",
+        "type": "core::integer::u32"
+      },
+      {
+        "name": "hash_prev_block",
+        "type": "zcash_relay::utils::hash::Digest"
+      },
+      {
+        "name": "hash_merkle_root",
+        "type": "zcash_relay::utils::hash::Digest"
+      },
+      {
+        "name": "hash_block_commitments",
+        "type": "zcash_relay::utils::hash::Digest"
+      },
+      {
+        "name": "n_time",
+        "type": "core::integer::u32"
+      },
+      {
+        "name": "n_bits",
+        "type": "core::integer::u32"
+      },
+      {
+        "name": "n_nonce",
+        "type": "core::integer::u256"
+      },
+      {
+        "name": "n_solution",
+        "type": "core::array::Span::<core::integer::u8>"
+      }
+    ]
+  },
+  {
+    "type": "enum",
+    "name": "zcash_relay::errors::RelayError",
+    "variants": [
+      {
+        "name": "InvalidDifficultyTarget",
+        "type": "()"
+      },
+      {
+        "name": "InvalidMerkleProof",
+        "type": "()"
+      },
+      {
+        "name": "InvalidTimestamp",
+        "type": "()"
+      },
+      {
+        "name": "BlockNotFound",
+        "type": "()"
+      },
+      {
+        "name": "InvalidHeightRange",
+        "type": "()"
+      },
+      {
+        "name": "HeightProofRequired",
+        "type": "()"
+      },
+      {
+        "name": "BlockNotRegistered",
+        "type": "()"
+      },
+      {
+        "name": "InvalidBlockLinkage",
+        "type": "()"
+      },
+      {
+        "name": "BlockNotCanonical",
+        "type": "()"
+      },
+      {
+        "name": "InsufficientAge",
+        "type": "()"
+      },
+      {
+        "name": "InsufficientCumulativePoW",
+        "type": "()"
+      },
+      {
+        "name": "InvalidSolutionSize",
+        "type": "()"
+      },
+      {
+        "name": "InvalidVersion",
+        "type": "()"
+      },
+      {
+        "name": "TimestampTooOld",
+        "type": "()"
+      }
+    ]
+  },
+  {
+    "type": "enum",
+    "name": "core::result::Result::<zcash_relay::utils::hash::Digest, zcash_relay::errors::RelayError>",
+    "variants": [
+      {
+        "name": "Ok",
+        "type": "zcash_relay::utils::hash::Digest"
+      },
+      {
+        "name": "Err",
+        "type": "zcash_relay::errors::RelayError"
+      }
+    ]
+  },
+  {
+    "type": "enum",
+    "name": "core::option::Option::<zcash_relay::utils::hash::Digest>",
+    "variants": [
+      {
+        "name": "Some",
+        "type": "zcash_relay::utils::hash::Digest"
+      },
+      {
+        "name": "None",
+        "type": "()"
+      }
+    ]
+  },
+  {
+    "type": "enum",
+    "name": "core::result::Result::<(), zcash_relay::errors::RelayError>",
+    "variants": [
+      {
+        "name": "Ok",
+        "type": "()"
+      },
+      {
+        "name": "Err",
+        "type": "zcash_relay::errors::RelayError"
+      }
+    ]
+  },
+  {
+    "type": "struct",
+    "name": "zcash_relay::zcash::status::BlockStatus",
+    "members": [
+      {
+        "name": "registration_timestamp",
+        "type": "core::integer::u64"
+      },
+      {
+        "name": "prev_block_digest",
+        "type": "zcash_relay::utils::hash::Digest"
+      },
+      {
+        "name": "pow",
+        "type": "core::integer::u256"
+      },
+      {
+        "name": "n_time",
+        "type": "core::integer::u32"
+      }
+    ]
+  },
+  {
+    "type": "enum",
+    "name": "core::bool",
+    "variants": [
+      {
+        "name": "False",
+        "type": "()"
+      },
+      {
+        "name": "True",
+        "type": "()"
+      }
+    ]
+  },
+  {
+    "type": "struct",
+    "name": "core::array::Span::<zcash_relay::utils::hash::Digest>",
+    "members": [
+      {
+        "name": "snapshot",
+        "type": "@core::array::Array::<zcash_relay::utils::hash::Digest>"
+      }
+    ]
+  },
+  {
+    "type": "enum",
+    "name": "core::result::Result::<core::bool, zcash_relay::errors::RelayError>",
+    "variants": [
+      {
+        "name": "Ok",
+        "type": "core::bool"
+      },
+      {
+        "name": "Err",
+        "type": "zcash_relay::errors::RelayError"
+      }
+    ]
+  },
+  {
+    "type": "interface",
+    "name": "zcash_relay::interfaces::IZcashRelay",
+    "items": [
+      {
+        "type": "function",
+        "name": "initialize",
+        "inputs": [
+          {
+            "name": "owner",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "start_block_verification",
+        "inputs": [
+          {
+            "name": "header",
+            "type": "zcash_relay::zcash::block::ZcashBlockHeader"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::felt252"
+          }
+        ],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "verify_leaves_batch",
+        "inputs": [
+          {
+            "name": "verification_id",
+            "type": "core::felt252"
+          },
+          {
+            "name": "batch_id",
+            "type": "core::integer::u32"
+          },
+          {
+            "name": "header",
+            "type": "zcash_relay::zcash::block::ZcashBlockHeader"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "verify_tree_all_levels",
+        "inputs": [
+          {
+            "name": "verification_id",
+            "type": "core::felt252"
+          },
+          {
+            "name": "header",
+            "type": "zcash_relay::zcash::block::ZcashBlockHeader"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "finalize_block_verification",
+        "inputs": [
+          {
+            "name": "verification_id",
+            "type": "core::felt252"
+          },
+          {
+            "name": "header",
+            "type": "zcash_relay::zcash::block::ZcashBlockHeader"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::result::Result::<zcash_relay::utils::hash::Digest, zcash_relay::errors::RelayError>"
+          }
+        ],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "update_canonical_chain",
+        "inputs": [
+          {
+            "name": "begin_height",
+            "type": "core::integer::u64"
+          },
+          {
+            "name": "end_height",
+            "type": "core::integer::u64"
+          },
+          {
+            "name": "end_block_hash",
+            "type": "zcash_relay::utils::hash::Digest"
+          },
+          {
+            "name": "height_proof",
+            "type": "core::option::Option::<zcash_relay::utils::hash::Digest>"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::result::Result::<(), zcash_relay::errors::RelayError>"
+          }
+        ],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "get_status",
+        "inputs": [
+          {
+            "name": "block_hash",
+            "type": "zcash_relay::utils::hash::Digest"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "zcash_relay::zcash::status::BlockStatus"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_block",
+        "inputs": [
+          {
+            "name": "height",
+            "type": "core::integer::u64"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "zcash_relay::utils::hash::Digest"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_chain_height",
+        "inputs": [],
+        "outputs": [
+          {
+            "type": "core::integer::u64"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_block_height",
+        "inputs": [
+          {
+            "name": "block_hash",
+            "type": "zcash_relay::utils::hash::Digest"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::integer::u64"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "is_block_canonical",
+        "inputs": [
+          {
+            "name": "block_hash",
+            "type": "zcash_relay::utils::hash::Digest"
+          },
+          {
+            "name": "height",
+            "type": "core::integer::u64"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::bool"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "is_block_finalized",
+        "inputs": [
+          {
+            "name": "block_hash",
+            "type": "zcash_relay::utils::hash::Digest"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::bool"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_finality_depth",
+        "inputs": [],
+        "outputs": [
+          {
+            "type": "core::integer::u64"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "assert_safe",
+        "inputs": [
+          {
+            "name": "block_height",
+            "type": "core::integer::u64"
+          },
+          {
+            "name": "block_hash",
+            "type": "zcash_relay::utils::hash::Digest"
+          },
+          {
+            "name": "min_cpow",
+            "type": "core::integer::u256"
+          },
+          {
+            "name": "min_age",
+            "type": "core::integer::u64"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::result::Result::<(), zcash_relay::errors::RelayError>"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "verify_transaction_in_block",
+        "inputs": [
+          {
+            "name": "block_hash",
+            "type": "zcash_relay::utils::hash::Digest"
+          },
+          {
+            "name": "tx_id",
+            "type": "zcash_relay::utils::hash::Digest"
+          },
+          {
+            "name": "merkle_branch",
+            "type": "core::array::Span::<zcash_relay::utils::hash::Digest>"
+          },
+          {
+            "name": "merkle_index",
+            "type": "core::integer::u32"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::result::Result::<core::bool, zcash_relay::errors::RelayError>"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_cumulative_pow",
+        "inputs": [
+          {
+            "name": "block_hash",
+            "type": "zcash_relay::utils::hash::Digest"
+          },
+          {
+            "name": "max_depth",
+            "type": "core::integer::u32"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::integer::u256"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_cumulative_pow_at_height",
+        "inputs": [
+          {
+            "name": "height",
+            "type": "core::integer::u64"
+          },
+          {
+            "name": "max_depth",
+            "type": "core::integer::u32"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::integer::u256"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_block_ancestry",
+        "inputs": [
+          {
+            "name": "start_block_hash",
+            "type": "zcash_relay::utils::hash::Digest"
+          },
+          {
+            "name": "max_depth",
+            "type": "core::integer::u32"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::integer::u32"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "compare_chains",
+        "inputs": [
+          {
+            "name": "pow_chain_a",
+            "type": "core::integer::u256"
+          },
+          {
+            "name": "pow_chain_b",
+            "type": "core::integer::u256"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::bool"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "find_fork_point",
+        "inputs": [
+          {
+            "name": "block_hash_a",
+            "type": "zcash_relay::utils::hash::Digest"
+          },
+          {
+            "name": "block_hash_b",
+            "type": "zcash_relay::utils::hash::Digest"
+          },
+          {
+            "name": "max_depth",
+            "type": "core::integer::u32"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "zcash_relay::utils::hash::Digest"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "upgrade",
+        "inputs": [
+          {
+            "name": "new_class_hash",
+            "type": "core::starknet::class_hash::ClassHash"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      }
+    ]
+  },
+  {
+    "type": "impl",
+    "name": "OwnableMixinImpl",
+    "interface_name": "openzeppelin_access::ownable::interface::OwnableABI"
+  },
+  {
+    "type": "interface",
+    "name": "openzeppelin_access::ownable::interface::OwnableABI",
+    "items": [
+      {
+        "type": "function",
+        "name": "owner",
+        "inputs": [],
+        "outputs": [
+          {
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "transfer_ownership",
+        "inputs": [
+          {
+            "name": "new_owner",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "renounce_ownership",
+        "inputs": [],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "transferOwnership",
+        "inputs": [
+          {
+            "name": "newOwner",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "renounceOwnership",
+        "inputs": [],
+        "outputs": [],
+        "state_mutability": "external"
+      }
+    ]
+  },
+  {
+    "type": "constructor",
+    "name": "constructor",
+    "inputs": []
+  },
+  {
+    "type": "event",
+    "name": "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferred",
+    "kind": "struct",
+    "members": [
+      {
+        "name": "previous_owner",
+        "type": "core::starknet::contract_address::ContractAddress",
+        "kind": "key"
+      },
+      {
+        "name": "new_owner",
+        "type": "core::starknet::contract_address::ContractAddress",
+        "kind": "key"
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferStarted",
+    "kind": "struct",
+    "members": [
+      {
+        "name": "previous_owner",
+        "type": "core::starknet::contract_address::ContractAddress",
+        "kind": "key"
+      },
+      {
+        "name": "new_owner",
+        "type": "core::starknet::contract_address::ContractAddress",
+        "kind": "key"
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "openzeppelin_access::ownable::ownable::OwnableComponent::Event",
+    "kind": "enum",
+    "variants": [
+      {
+        "name": "OwnershipTransferred",
+        "type": "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferred",
+        "kind": "nested"
+      },
+      {
+        "name": "OwnershipTransferStarted",
+        "type": "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferStarted",
+        "kind": "nested"
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Upgraded",
+    "kind": "struct",
+    "members": [
+      {
+        "name": "class_hash",
+        "type": "core::starknet::class_hash::ClassHash",
+        "kind": "data"
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Event",
+    "kind": "enum",
+    "variants": [
+      {
+        "name": "Upgraded",
+        "type": "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Upgraded",
+        "kind": "nested"
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "zcash_relay::events::BlockRegistered",
+    "kind": "struct",
+    "members": [
+      {
+        "name": "block_hash",
+        "type": "zcash_relay::utils::hash::Digest",
+        "kind": "data"
+      },
+      {
+        "name": "timestamp",
+        "type": "core::integer::u64",
+        "kind": "data"
+      },
+      {
+        "name": "pow",
+        "type": "core::integer::u256",
+        "kind": "data"
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "zcash_relay::events::CanonicalChainUpdated",
+    "kind": "struct",
+    "members": [
+      {
+        "name": "new_height",
+        "type": "core::integer::u64",
+        "kind": "data"
+      },
+      {
+        "name": "new_hash",
+        "type": "zcash_relay::utils::hash::Digest",
+        "kind": "data"
+      },
+      {
+        "name": "total_pow",
+        "type": "core::integer::u256",
+        "kind": "data"
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "zcash_relay::events::ChainReorganization",
+    "kind": "struct",
+    "members": [
+      {
+        "name": "old_height",
+        "type": "core::integer::u64",
+        "kind": "data"
+      },
+      {
+        "name": "new_height",
+        "type": "core::integer::u64",
+        "kind": "data"
+      },
+      {
+        "name": "reorg_depth",
+        "type": "core::integer::u64",
+        "kind": "data"
+      },
+      {
+        "name": "old_pow",
+        "type": "core::integer::u256",
+        "kind": "data"
+      },
+      {
+        "name": "new_pow",
+        "type": "core::integer::u256",
+        "kind": "data"
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "zcash_relay::events::VerificationStarted",
+    "kind": "struct",
+    "members": [
+      {
+        "name": "verification_id",
+        "type": "core::felt252",
+        "kind": "key"
+      },
+      {
+        "name": "block_hash",
+        "type": "zcash_relay::utils::hash::Digest",
+        "kind": "data"
+      },
+      {
+        "name": "initiator",
+        "type": "core::starknet::contract_address::ContractAddress",
+        "kind": "data"
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "zcash_relay::relay::ZcashRelay::Event",
+    "kind": "enum",
+    "variants": [
+      {
+        "name": "OwnableEvent",
+        "type": "openzeppelin_access::ownable::ownable::OwnableComponent::Event",
+        "kind": "flat"
+      },
+      {
+        "name": "UpgradeableEvent",
+        "type": "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Event",
+        "kind": "flat"
+      },
+      {
+        "name": "BlockRegistered",
+        "type": "zcash_relay::events::BlockRegistered",
+        "kind": "nested"
+      },
+      {
+        "name": "CanonicalChainUpdated",
+        "type": "zcash_relay::events::CanonicalChainUpdated",
+        "kind": "nested"
+      },
+      {
+        "name": "ChainReorganization",
+        "type": "zcash_relay::events::ChainReorganization",
+        "kind": "nested"
+      },
+      {
+        "name": "VerificationStarted",
+        "type": "zcash_relay::events::VerificationStarted",
+        "kind": "nested"
+      }
+    ]
+  }
+]

@@ -1,0 +1,27 @@
+ZCASH RELAY - STARKNET SEPOLIA
+==============================
+Updated: 2025-11-29
+
+ACCOUNT
+-------
+Address: 0x59fb72066702b66dcf65b4ced46a29f20cf6967d9456a3155646442ed1b1b87
+Explorer: https://sepolia.starkscan.co/contract/0x059fb72066702b66dcf65b4ced46a29f20cf6967d9456a3155646442ed1b1b87
+
+CURRENT CONTRACT (V7)
+---------------------
+Class Hash:    0xbc8ddbe7029c3df77cad545b9072cb1c9c920b4018922f2b2d6638f394b353
+Contract:      0x05dba82c62d5f37161581bc0380eb98cf2a401d84e4fc5c5eb27000bf2b52ce5
+Owner:         0x59fb72066702b66dcf65b4ced46a29f20cf6967d9456a3155646442ed1b1b87
+
+Declare TX:    0x3d01708e922971cfa6dc4648b08d9b058d6c92f94b34331dfedc6c0eb907b1d
+Deploy TX:     0x073bb6acf4b2d7fd2b8a9cdaac0e8d36a45d79d4de477f203f084572dff1f883
+Initialize TX: 0x06e55e4df01b75e6c21e4258fdcfecd8083b241111fd2caf5fee95a790de1bc3
+
+Explorer Links:
+- Contract: https://sepolia.starkscan.co/contract/0x05dba82c62d5f37161581bc0380eb98cf2a401d84e4fc5c5eb27000bf2b52ce5
+- Class:    https://sepolia.starkscan.co/class/0x00bc8ddbe7029c3df77cad545b9072cb1c9c920b4018922f2b2d6638f394b353
+
+
+USAGE
+-----
+./scripts/relay_block.sh <height>   # e.g., ./scripts/relay_block.sh 0
