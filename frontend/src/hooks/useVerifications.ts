@@ -16,12 +16,16 @@ export interface VerificationStep {
   txHash: string;
   time: number;
   gas?: number;
+  actualFee?: number;      // Real fee in STRK
+  actualFeeRaw?: string;   // Raw fee in FRI
+  unit?: string;
 }
 
 export interface BlockVerification {
   verification_id: string;
   totalTime?: number;
   totalGas?: number;
+  totalFee?: number;       // Real total fee in STRK
   transactions: VerificationStep[];
 }
 

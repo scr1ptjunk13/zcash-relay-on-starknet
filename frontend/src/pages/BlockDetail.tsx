@@ -247,7 +247,11 @@ function VerificationTimeline({ height, explorerUrl }: { height: number; explore
               </div>
             </div>
             <div className="text-right">
-              <span className="text-sm font-mono">{formatGas(tx.gas)} gas</span>
+              {tx.actualFee !== undefined ? (
+                <span className="text-sm font-mono text-success">{tx.actualFee.toFixed(6)} STRK</span>
+              ) : (
+                <span className="text-sm font-mono text-muted-foreground">{formatGas(tx.gas)} gas</span>
+              )}
             </div>
           </div>
         ))}
@@ -256,12 +260,18 @@ function VerificationTimeline({ height, explorerUrl }: { height: number; explore
       {/* Summary */}
       <div className="mt-6 pt-6 border-t border-border flex justify-between items-center">
         <div>
-          <span className="text-sm text-muted-foreground">Total Gas Used</span>
-          <p className="text-xl font-mono font-bold">{verification.totalGas?.toLocaleString() ?? "—"}</p>
+          <span className="text-sm text-muted-foreground">
+            {verification.totalFee !== undefined ? "Total Cost (Real)" : "Total Gas (Est.)"}
+          </span>
+          <p className="text-xl font-mono font-bold">
+            {verification.totalFee !== undefined 
+              ? `${verification.totalFee.toFixed(6)} STRK`
+              : verification.totalGas?.toLocaleString() ?? "—"}
+          </p>
         </div>
         <div className="text-right">
-          <span className="text-sm text-muted-foreground">Estimated Cost</span>
-          <p className="text-xl font-mono font-bold">{calculateStrkCost(verification.totalGas)} STRK</p>
+          <span className="text-sm text-muted-foreground">Status</span>
+          <p className="text-xl font-mono font-bold text-success">Verified ✓</p>
         </div>
       </div>
     </Card>
