@@ -193,9 +193,40 @@ function runVerification(targetHeight) {
       console.error('[RELAY ERROR]', data.toString());
     });
     
-    childProcess.on('close', (code) => {
+    childProcess.on('close', async (code) => {
       activeProcess = null;
       console.log('[VERIFY] Block ' + targetHeight + ' done, code ' + code);
+      
+      // Auto-backfill fees after successful verification
+      if (code === 0) {
+        console.log('[FEE] Auto-backfilling fees for block ' + targetHeight);
+        try {
+          const data = JSON.parse(fs.readFileSync(VERIFICATIONS_FILE, 'utf8'));
+          const blockKey = 'block_' + targetHeight;
+          
+          if (data[blockKey] && data[blockKey].transactions) {
+            for (const tx of data[blockKey].transactions) {
+              if (tx.txHash && tx.txHash.length === 66 && !tx.actualFee) {
+                const feeData = await fetchTransactionFee(tx.txHash);
+                tx.actualFee = feeData.actualFee;
+                tx.actualFeeRaw = feeData.actualFeeRaw;
+                await new Promise(r => setTimeout(r, 300));
+              }
+            }
+            
+            let totalFee = 0;
+            for (const t of data[blockKey].transactions) {
+              if (t.actualFee) totalFee += t.actualFee;
+            }
+            data[blockKey].totalFee = totalFee;
+            fs.writeFileSync(VERIFICATIONS_FILE, JSON.stringify(data, null, 2));
+            console.log('[FEE] Block ' + targetHeight + ' total: ' + totalFee.toFixed(4) + ' STRK');
+          }
+        } catch (e) {
+          console.error('[FEE] Backfill error:', e.message);
+        }
+      }
+      
       broadcast({ type: 'complete', height: targetHeight, success: code === 0 });
       code === 0 ? resolve() : reject(new Error('Failed'));
     });
