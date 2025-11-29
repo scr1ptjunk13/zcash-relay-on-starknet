@@ -73,8 +73,7 @@ try:
             'step': ${step},
             'name': "${name}",
             'txHash': "${tx_hash}",
-            'time': ${time_val},
-            'gas': 100000
+            'time': ${time_val}
         })
         
         f.seek(0)

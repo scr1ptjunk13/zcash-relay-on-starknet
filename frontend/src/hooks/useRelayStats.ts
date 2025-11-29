@@ -4,6 +4,30 @@ import { useQuery } from "@tanstack/react-query";
 import { useStarknet } from "@/lib/starknet";
 import { RelayStats, formatPow } from "@/lib/starknet/types";
 
+const BACKEND_URL = "http://localhost:3001";
+
+// Fetch average cost from real verification data
+async function fetchAverageCost(): Promise<string> {
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/verifications`);
+    if (!res.ok) return "—";
+    
+    const data = await res.json();
+    const blocks = Object.values(data) as Array<{ totalFee?: number }>;
+    
+    // Calculate average from blocks that have real fee data
+    const blocksWithFees = blocks.filter(b => b.totalFee !== undefined && b.totalFee > 0);
+    if (blocksWithFees.length === 0) return "~0.002 STRK";
+    
+    const totalFees = blocksWithFees.reduce((sum, b) => sum + (b.totalFee || 0), 0);
+    const avgFee = totalFees / blocksWithFees.length;
+    
+    return `~${avgFee.toFixed(2)} STRK`;
+  } catch (e) {
+    return "~0.002 STRK";
+  }
+}
+
 export function useRelayStats() {
   const { contract, isConfigured } = useStarknet();
 
@@ -30,9 +54,8 @@ export function useRelayStats() {
       // blocksVerified = currentHeight + 1 (blocks 0 to currentHeight inclusive)
       const blocksVerified = currentHeight + 1;
 
-      // Average cost is an estimate - would need to track actual gas costs from events
-      // For now use a reasonable estimate based on ~19 txs per block verification
-      const avgCost = "~0.002 STRK";
+      // Fetch REAL average cost from verification data
+      const avgCost = await fetchAverageCost();
 
       return {
         currentHeight,

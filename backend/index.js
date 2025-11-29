@@ -14,8 +14,11 @@ app.use(express.json());
 const PORT = 3001;
 const WS_PORT = 3002;
 
+// Load env vars
+require('dotenv').config({ path: '../.env' });
+
 const provider = new RpcProvider({ 
-  nodeUrl: 'https://starknet-sepolia.public.blastapi.io/rpc/v0_7'
+  nodeUrl: process.env.STARKNET_RPC_URL || 'https://starknet-sepolia.g.alchemy.com/starknet/version/rpc/v0_7'
 });
 
 const VERIFICATIONS_FILE = path.join(__dirname, '../frontend/src/data/verifications.json');

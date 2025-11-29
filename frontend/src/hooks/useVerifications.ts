@@ -29,31 +29,43 @@ export interface BlockVerification {
   transactions: VerificationStep[];
 }
 
-// Get verification data for a specific block
+const BACKEND_URL = "http://localhost:3001";
+
+// Get verification data for a specific block (from backend API for real-time data)
 export function useBlockVerification(height: number | undefined) {
   return useQuery({
     queryKey: ["verification", height],
     queryFn: async (): Promise<BlockVerification | null> => {
       if (height === undefined) return null;
       
-      const blockKey = `block_${height}` as keyof typeof verificationsData;
-      const data = verificationsData[blockKey];
-      
-      if (data) {
-        return data as BlockVerification;
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/verifications/${height}`);
+        if (res.ok) {
+          return await res.json();
+        }
+      } catch (e) {
+        // Fallback to static data
+        const blockKey = `block_${height}` as keyof typeof verificationsData;
+        const data = verificationsData[blockKey];
+        if (data) return data as BlockVerification;
       }
       
       return null;
     },
     enabled: height !== undefined,
+    staleTime: 5000, // Refetch every 5s
   });
 }
 
-// Get all verifications
+// Get all verifications (from backend API)
 export function useAllVerifications() {
   return useQuery({
     queryKey: ["allVerifications"],
     queryFn: async () => {
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/verifications`);
+        if (res.ok) return await res.json();
+      } catch (e) {}
       return verificationsData as Record<string, BlockVerification>;
     },
   });
