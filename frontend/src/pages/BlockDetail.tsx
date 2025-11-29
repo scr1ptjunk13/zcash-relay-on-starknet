@@ -2,11 +2,12 @@ import { useParams, Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Copy, Check, AlertCircle } from "lucide-react";
+import { ArrowLeft, Copy, Check, AlertCircle, CheckCircle2, ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { useBlock, useChainHeight } from "@/hooks/useRelayContract";
 import { useStarknet, formatPow } from "@/lib/starknet";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useBlockVerification, formatGas, calculateStrkCost } from "@/hooks/useVerifications";
 
 const BlockDetail = () => {
   const { hashOrHeight } = useParams();
@@ -170,23 +171,101 @@ const BlockDetail = () => {
           </div>
         </Card>
 
-        {/* Explorer Link */}
-        <Card className="p-6 bg-card border-border">
-          <h2 className="text-xl font-semibold mb-4">External Links</h2>
-          <div className="flex gap-4">
-            <a
-              href={`${explorerUrl}/contract/${block.hash}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:text-primary/80 text-sm underline"
-            >
-              View on Starkscan →
-            </a>
-          </div>
-        </Card>
+        {/* Verification Timeline */}
+        <VerificationTimeline height={block.height} explorerUrl={explorerUrl} />
       </div>
     </div>
   );
 };
+
+// Verification Timeline Component
+function VerificationTimeline({ height, explorerUrl }: { height: number; explorerUrl: string }) {
+  const { data: verification, isLoading } = useBlockVerification(height);
+  const [copied, setCopied] = useState<string | null>(null);
+
+  const copyHash = (hash: string, id: string) => {
+    navigator.clipboard.writeText(hash);
+    setCopied(id);
+    setTimeout(() => setCopied(null), 2000);
+  };
+
+  if (isLoading) {
+    return (
+      <Card className="p-6 bg-card border-border">
+        <h2 className="text-xl font-semibold mb-4">Verification Timeline</h2>
+        <div className="text-muted-foreground">Loading...</div>
+      </Card>
+    );
+  }
+
+  if (!verification) {
+    return (
+      <Card className="p-6 bg-card border-border">
+        <h2 className="text-xl font-semibold mb-4">Verification Timeline</h2>
+        <div className="text-muted-foreground">No verification data available for this block.</div>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="p-6 bg-card border-border">
+      <h2 className="text-xl font-semibold mb-6">Verification Timeline</h2>
+      
+      <div className="space-y-3">
+        {verification.transactions.map((tx, idx) => (
+          <div
+            key={tx.step}
+            className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:border-border transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <CheckCircle2 className="w-5 h-5 text-success" />
+              <div>
+                <span className="text-sm font-medium">Step {tx.step}: {tx.name}</span>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="font-mono text-xs text-muted-foreground">
+                    {tx.txHash.slice(0, 10)}...{tx.txHash.slice(-6)}
+                  </span>
+                  <button
+                    onClick={() => copyHash(tx.txHash, `tx-${idx}`)}
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {copied === `tx-${idx}` ? (
+                      <Check className="h-3 w-3" />
+                    ) : (
+                      <Copy className="h-3 w-3" />
+                    )}
+                  </button>
+                  <a
+                    href={`${explorerUrl}/tx/${tx.txHash}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div className="text-right">
+              <span className="text-sm font-mono">{formatGas(tx.gas)} gas</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Summary */}
+      <div className="mt-6 pt-6 border-t border-border flex justify-between items-center">
+        <div>
+          <span className="text-sm text-muted-foreground">Total Gas Used</span>
+          <p className="text-xl font-mono font-bold">{verification.totalGas?.toLocaleString() ?? "—"}</p>
+        </div>
+        <div className="text-right">
+          <span className="text-sm text-muted-foreground">Estimated Cost</span>
+          <p className="text-xl font-mono font-bold">{calculateStrkCost(verification.totalGas)} STRK</p>
+        </div>
+      </div>
+    </Card>
+  );
+}
 
 export default BlockDetail;

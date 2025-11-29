@@ -27,6 +27,15 @@ CONTRACT="0x05dba82c62d5f37161581bc0380eb98cf2a401d84e4fc5c5eb27000bf2b52ce5"
 ACCOUNT="testnet_account"
 NETWORK="sepolia"
 
+[ -z "$1" ] && { echo -e "${RED}Usage:${NC} $0 <target_height> [--resume]"; exit 1; }
+
+TARGET=$1
+RESUME=false
+[ "$2" = "--resume" ] && RESUME=true
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR/.."
+
 # TX log file for frontend
 TX_LOG_DIR="$SCRIPT_DIR/../frontend/src/data"
 mkdir -p "$TX_LOG_DIR"
@@ -37,74 +46,77 @@ if [ ! -f "$TX_LOG_FILE" ]; then
     echo '{}' > "$TX_LOG_FILE"
 fi
 
-[ -z "$1" ] && { echo -e "${RED}Usage:${NC} $0 <target_height> [--resume]"; exit 1; }
-
-TARGET=$1
-RESUME=false
-[ "$2" = "--resume" ] && RESUME=true
-
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR/.."
-
 # Save TX to JSON log
 save_tx_to_log() {
-    local block=$1 step=$2 name=$3 tx_hash=$4 time=$5
-    python3 -c "
+    local block="$1" step="$2" name="$3" tx_hash="$4" time_val="$5"
+    python3 << EOF
 import json
 import os
+import fcntl
 
-log_file = '$TX_LOG_FILE'
-block_key = 'block_$block'
+log_file = "${TX_LOG_FILE}"
+block_key = "block_${block}"
 
-# Read existing
-if os.path.exists(log_file):
-    with open(log_file, 'r') as f:
-        data = json.load(f)
-else:
-    data = {}
-
-# Initialize block if needed
-if block_key not in data:
-    data[block_key] = {'transactions': [], 'verification_id': ''}
-
-# Add transaction
-data[block_key]['transactions'].append({
-    'step': $step,
-    'name': '$name',
-    'txHash': '$tx_hash',
-    'time': $time
-})
-
-# Write back
-with open(log_file, 'w') as f:
-    json.dump(data, f, indent=2)
-"
+# Use file locking to prevent race conditions
+try:
+    with open(log_file, 'r+') as f:
+        fcntl.flock(f.fileno(), fcntl.LOCK_EX)
+        try:
+            data = json.load(f)
+        except:
+            data = {}
+        
+        if block_key not in data:
+            data[block_key] = {'transactions': [], 'verification_id': ''}
+        
+        data[block_key]['transactions'].append({
+            'step': ${step},
+            'name': "${name}",
+            'txHash': "${tx_hash}",
+            'time': ${time_val},
+            'gas': 100000
+        })
+        
+        f.seek(0)
+        f.truncate()
+        json.dump(data, f, indent=2)
+        fcntl.flock(f.fileno(), fcntl.LOCK_UN)
+except Exception as e:
+    print(f"Error saving TX: {e}")
+EOF
 }
 
 # Save verification ID to log
 save_vid_to_log() {
-    local block=$1 vid=$2
-    python3 -c "
+    local block="$1" vid="$2"
+    python3 << EOF
 import json
 import os
+import fcntl
 
-log_file = '$TX_LOG_FILE'
-block_key = 'block_$block'
+log_file = "${TX_LOG_FILE}"
+block_key = "block_${block}"
 
-if os.path.exists(log_file):
-    with open(log_file, 'r') as f:
-        data = json.load(f)
-else:
-    data = {}
-
-if block_key not in data:
-    data[block_key] = {'transactions': [], 'verification_id': ''}
-
-data[block_key]['verification_id'] = '$vid'
-
-with open(log_file, 'w') as f:
-    json.dump(data, f, indent=2)
-"
+try:
+    with open(log_file, 'r+') as f:
+        fcntl.flock(f.fileno(), fcntl.LOCK_EX)
+        try:
+            data = json.load(f)
+        except:
+            data = {}
+        
+        if block_key not in data:
+            data[block_key] = {'transactions': [], 'verification_id': ''}
+        
+        data[block_key]['verification_id'] = "${vid}"
+        
+        f.seek(0)
+        f.truncate()
+        json.dump(data, f, indent=2)
+        fcntl.flock(f.fileno(), fcntl.LOCK_UN)
+except Exception as e:
+    print(f"Error saving VID: {e}")
+EOF
 }
 
 # Invoke with retry

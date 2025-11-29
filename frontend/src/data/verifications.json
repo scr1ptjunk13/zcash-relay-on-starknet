@@ -4,25 +4,139 @@
     "totalTime": 283,
     "totalGas": 2676676,
     "transactions": [
-      {"step": 1, "name": "Start Verification", "txHash": "0x0346df4637400ebe6b784f63", "time": 5, "gas": 45231},
-      {"step": 2, "name": "Leaf Verification Batch 0", "txHash": "0x02310eab5a18cb7d3e92e437", "time": 8, "gas": 61690},
-      {"step": 3, "name": "Leaf Verification Batch 1", "txHash": "0x0100bff1162cef1f830a14ce", "time": 7, "gas": 65521},
-      {"step": 4, "name": "Leaf Verification Batch 2", "txHash": "0x04a1a460f498340e929d9de6", "time": 7, "gas": 83019},
-      {"step": 5, "name": "Leaf Verification Batch 3", "txHash": "0x03ec5c57497554332d7ee52f", "time": 12, "gas": 147003},
-      {"step": 6, "name": "Leaf Verification Batch 4", "txHash": "0x03a4c8515721b608e8eb4603", "time": 6, "gas": 122436},
-      {"step": 7, "name": "Leaf Verification Batch 5", "txHash": "0x05e27fe5b5e14a892f90c8a5", "time": 11, "gas": 91513},
-      {"step": 8, "name": "Leaf Verification Batch 6", "txHash": "0x02c1f61226a4ce0a8c8f7837", "time": 5, "gas": 148172},
-      {"step": 9, "name": "Leaf Verification Batch 7", "txHash": "0x01602641efa74f6ce792a5c6", "time": 6, "gas": 138947},
-      {"step": 10, "name": "Leaf Verification Batch 8", "txHash": "0x063bcaef1d8d129c2d476529", "time": 6, "gas": 117246},
-      {"step": 11, "name": "Leaf Verification Batch 9", "txHash": "0x07a1d6fdeeee9763fbfc844c", "time": 6, "gas": 100243},
-      {"step": 12, "name": "Leaf Verification Batch 10", "txHash": "0x01ec2bb89bf9a596a434c304", "time": 5, "gas": 139237},
-      {"step": 13, "name": "Leaf Verification Batch 11", "txHash": "0x01ee07ecbe1fc7eea947e917", "time": 6, "gas": 62589},
-      {"step": 14, "name": "Leaf Verification Batch 12", "txHash": "0x04dedc8ababb8d7f9621a5fd", "time": 6, "gas": 127213},
-      {"step": 15, "name": "Leaf Verification Batch 13", "txHash": "0x00fb0daa9c6e919e905fa3fe", "time": 7, "gas": 51133},
-      {"step": 16, "name": "Leaf Verification Batch 14", "txHash": "0x04cd97aa560e718b13f420d8", "time": 5, "gas": 67134},
-      {"step": 17, "name": "Leaf Verification Batch 15", "txHash": "0x06cb9e780f668df98e0085f9", "time": 7, "gas": 92452},
-      {"step": 18, "name": "Tree Construction", "txHash": "0x07d17771bfb3075e1661565e", "time": 7, "gas": 892441},
-      {"step": 19, "name": "Finalization", "txHash": "0x060a701c39fa561ced21257f", "time": 5, "gas": 123456}
+      {
+        "step": 1,
+        "name": "Start Verification",
+        "txHash": "0x0346df4637400ebe6b784f63",
+        "time": 5,
+        "gas": 45231
+      },
+      {
+        "step": 2,
+        "name": "Leaf Verification Batch 0",
+        "txHash": "0x02310eab5a18cb7d3e92e437",
+        "time": 8,
+        "gas": 61690
+      },
+      {
+        "step": 3,
+        "name": "Leaf Verification Batch 1",
+        "txHash": "0x0100bff1162cef1f830a14ce",
+        "time": 7,
+        "gas": 65521
+      },
+      {
+        "step": 4,
+        "name": "Leaf Verification Batch 2",
+        "txHash": "0x04a1a460f498340e929d9de6",
+        "time": 7,
+        "gas": 83019
+      },
+      {
+        "step": 5,
+        "name": "Leaf Verification Batch 3",
+        "txHash": "0x03ec5c57497554332d7ee52f",
+        "time": 12,
+        "gas": 147003
+      },
+      {
+        "step": 6,
+        "name": "Leaf Verification Batch 4",
+        "txHash": "0x03a4c8515721b608e8eb4603",
+        "time": 6,
+        "gas": 122436
+      },
+      {
+        "step": 7,
+        "name": "Leaf Verification Batch 5",
+        "txHash": "0x05e27fe5b5e14a892f90c8a5",
+        "time": 11,
+        "gas": 91513
+      },
+      {
+        "step": 8,
+        "name": "Leaf Verification Batch 6",
+        "txHash": "0x02c1f61226a4ce0a8c8f7837",
+        "time": 5,
+        "gas": 148172
+      },
+      {
+        "step": 9,
+        "name": "Leaf Verification Batch 7",
+        "txHash": "0x01602641efa74f6ce792a5c6",
+        "time": 6,
+        "gas": 138947
+      },
+      {
+        "step": 10,
+        "name": "Leaf Verification Batch 8",
+        "txHash": "0x063bcaef1d8d129c2d476529",
+        "time": 6,
+        "gas": 117246
+      },
+      {
+        "step": 11,
+        "name": "Leaf Verification Batch 9",
+        "txHash": "0x07a1d6fdeeee9763fbfc844c",
+        "time": 6,
+        "gas": 100243
+      },
+      {
+        "step": 12,
+        "name": "Leaf Verification Batch 10",
+        "txHash": "0x01ec2bb89bf9a596a434c304",
+        "time": 5,
+        "gas": 139237
+      },
+      {
+        "step": 13,
+        "name": "Leaf Verification Batch 11",
+        "txHash": "0x01ee07ecbe1fc7eea947e917",
+        "time": 6,
+        "gas": 62589
+      },
+      {
+        "step": 14,
+        "name": "Leaf Verification Batch 12",
+        "txHash": "0x04dedc8ababb8d7f9621a5fd",
+        "time": 6,
+        "gas": 127213
+      },
+      {
+        "step": 15,
+        "name": "Leaf Verification Batch 13",
+        "txHash": "0x00fb0daa9c6e919e905fa3fe",
+        "time": 7,
+        "gas": 51133
+      },
+      {
+        "step": 16,
+        "name": "Leaf Verification Batch 14",
+        "txHash": "0x04cd97aa560e718b13f420d8",
+        "time": 5,
+        "gas": 67134
+      },
+      {
+        "step": 17,
+        "name": "Leaf Verification Batch 15",
+        "txHash": "0x06cb9e780f668df98e0085f9",
+        "time": 7,
+        "gas": 92452
+      },
+      {
+        "step": 18,
+        "name": "Tree Construction",
+        "txHash": "0x07d17771bfb3075e1661565e",
+        "time": 7,
+        "gas": 892441
+      },
+      {
+        "step": 19,
+        "name": "Finalization",
+        "txHash": "0x060a701c39fa561ced21257f",
+        "time": 5,
+        "gas": 123456
+      }
     ]
   },
   "block_1": {
@@ -30,25 +144,139 @@
     "totalTime": 279,
     "totalGas": 2650000,
     "transactions": [
-      {"step": 1, "name": "Start Verification", "txHash": "0x00fbf545e82277b582ce6aa0", "time": 5, "gas": 45231},
-      {"step": 2, "name": "Leaf Verification Batch 0", "txHash": "0x013a1c393d2dd5f58963dd98", "time": 5, "gas": 72683},
-      {"step": 3, "name": "Leaf Verification Batch 1", "txHash": "0x02ce90c2c6dbce2cb95a6bac", "time": 12, "gas": 111410},
-      {"step": 4, "name": "Leaf Verification Batch 2", "txHash": "0x0368b67f28e5ea6d0c24d662", "time": 15, "gas": 126879},
-      {"step": 5, "name": "Leaf Verification Batch 3", "txHash": "0x05d16df7e1f3ad12ae431769", "time": 5, "gas": 97620},
-      {"step": 6, "name": "Leaf Verification Batch 4", "txHash": "0x02e0769da548c091d51cc5c9", "time": 4, "gas": 75761},
-      {"step": 7, "name": "Leaf Verification Batch 5", "txHash": "0x01f3aaf6d8f7da57139ae012", "time": 6, "gas": 119783},
-      {"step": 8, "name": "Leaf Verification Batch 6", "txHash": "0x0348cc596692eef63c06099d", "time": 6, "gas": 91242},
-      {"step": 9, "name": "Leaf Verification Batch 7", "txHash": "0x07ec6aff07ef00a9bf930a62", "time": 5, "gas": 75228},
-      {"step": 10, "name": "Leaf Verification Batch 8", "txHash": "0x04f96f80a8644c10e55c28e5", "time": 4, "gas": 115871},
-      {"step": 11, "name": "Leaf Verification Batch 9", "txHash": "0x06c53b79ae17a44839ac9176", "time": 6, "gas": 77628},
-      {"step": 12, "name": "Leaf Verification Batch 10", "txHash": "0x033c6aa7481f88a3da8022b1", "time": 6, "gas": 75253},
-      {"step": 13, "name": "Leaf Verification Batch 11", "txHash": "0x078a6db09ecfa34061e338db", "time": 6, "gas": 80396},
-      {"step": 14, "name": "Leaf Verification Batch 12", "txHash": "0x04a3686c7faeb5cda9437d26", "time": 6, "gas": 104388},
-      {"step": 15, "name": "Leaf Verification Batch 13", "txHash": "0x05d193115286e3a5ea3e7caa", "time": 5, "gas": 109863},
-      {"step": 16, "name": "Leaf Verification Batch 14", "txHash": "0x00f7be5b8c1ed6607d1d090b", "time": 6, "gas": 86688},
-      {"step": 17, "name": "Leaf Verification Batch 15", "txHash": "0x0114880711a6b3341bef7c8b", "time": 7, "gas": 88497},
-      {"step": 18, "name": "Tree Construction", "txHash": "0x0290ea497ce3c5d69c0d4ee3", "time": 6, "gas": 892441},
-      {"step": 19, "name": "Finalization", "txHash": "0x070e19fb7909229ed2d98dd3", "time": 5, "gas": 123456}
+      {
+        "step": 1,
+        "name": "Start Verification",
+        "txHash": "0x00fbf545e82277b582ce6aa0",
+        "time": 5,
+        "gas": 45231
+      },
+      {
+        "step": 2,
+        "name": "Leaf Verification Batch 0",
+        "txHash": "0x013a1c393d2dd5f58963dd98",
+        "time": 5,
+        "gas": 72683
+      },
+      {
+        "step": 3,
+        "name": "Leaf Verification Batch 1",
+        "txHash": "0x02ce90c2c6dbce2cb95a6bac",
+        "time": 12,
+        "gas": 111410
+      },
+      {
+        "step": 4,
+        "name": "Leaf Verification Batch 2",
+        "txHash": "0x0368b67f28e5ea6d0c24d662",
+        "time": 15,
+        "gas": 126879
+      },
+      {
+        "step": 5,
+        "name": "Leaf Verification Batch 3",
+        "txHash": "0x05d16df7e1f3ad12ae431769",
+        "time": 5,
+        "gas": 97620
+      },
+      {
+        "step": 6,
+        "name": "Leaf Verification Batch 4",
+        "txHash": "0x02e0769da548c091d51cc5c9",
+        "time": 4,
+        "gas": 75761
+      },
+      {
+        "step": 7,
+        "name": "Leaf Verification Batch 5",
+        "txHash": "0x01f3aaf6d8f7da57139ae012",
+        "time": 6,
+        "gas": 119783
+      },
+      {
+        "step": 8,
+        "name": "Leaf Verification Batch 6",
+        "txHash": "0x0348cc596692eef63c06099d",
+        "time": 6,
+        "gas": 91242
+      },
+      {
+        "step": 9,
+        "name": "Leaf Verification Batch 7",
+        "txHash": "0x07ec6aff07ef00a9bf930a62",
+        "time": 5,
+        "gas": 75228
+      },
+      {
+        "step": 10,
+        "name": "Leaf Verification Batch 8",
+        "txHash": "0x04f96f80a8644c10e55c28e5",
+        "time": 4,
+        "gas": 115871
+      },
+      {
+        "step": 11,
+        "name": "Leaf Verification Batch 9",
+        "txHash": "0x06c53b79ae17a44839ac9176",
+        "time": 6,
+        "gas": 77628
+      },
+      {
+        "step": 12,
+        "name": "Leaf Verification Batch 10",
+        "txHash": "0x033c6aa7481f88a3da8022b1",
+        "time": 6,
+        "gas": 75253
+      },
+      {
+        "step": 13,
+        "name": "Leaf Verification Batch 11",
+        "txHash": "0x078a6db09ecfa34061e338db",
+        "time": 6,
+        "gas": 80396
+      },
+      {
+        "step": 14,
+        "name": "Leaf Verification Batch 12",
+        "txHash": "0x04a3686c7faeb5cda9437d26",
+        "time": 6,
+        "gas": 104388
+      },
+      {
+        "step": 15,
+        "name": "Leaf Verification Batch 13",
+        "txHash": "0x05d193115286e3a5ea3e7caa",
+        "time": 5,
+        "gas": 109863
+      },
+      {
+        "step": 16,
+        "name": "Leaf Verification Batch 14",
+        "txHash": "0x00f7be5b8c1ed6607d1d090b",
+        "time": 6,
+        "gas": 86688
+      },
+      {
+        "step": 17,
+        "name": "Leaf Verification Batch 15",
+        "txHash": "0x0114880711a6b3341bef7c8b",
+        "time": 7,
+        "gas": 88497
+      },
+      {
+        "step": 18,
+        "name": "Tree Construction",
+        "txHash": "0x0290ea497ce3c5d69c0d4ee3",
+        "time": 6,
+        "gas": 892441
+      },
+      {
+        "step": 19,
+        "name": "Finalization",
+        "txHash": "0x070e19fb7909229ed2d98dd3",
+        "time": 5,
+        "gas": 123456
+      }
     ]
   },
   "block_2": {
@@ -56,25 +284,139 @@
     "totalTime": 270,
     "totalGas": 2618210,
     "transactions": [
-      {"step": 1, "name": "Start Verification", "txHash": "0x0282cb33b84de858ecff7363", "time": 5, "gas": 45231},
-      {"step": 2, "name": "Leaf Verification Batch 0", "txHash": "0x0515558f5419c63b17ce381d", "time": 6, "gas": 72683},
-      {"step": 3, "name": "Leaf Verification Batch 1", "txHash": "0x042f7dc5d04b90b6cd6de08b", "time": 5, "gas": 111410},
-      {"step": 4, "name": "Leaf Verification Batch 2", "txHash": "0x01b5d267daddf2d7039bdd7a", "time": 5, "gas": 126879},
-      {"step": 5, "name": "Leaf Verification Batch 3", "txHash": "0x076db67ec1773630af602d92", "time": 6, "gas": 97620},
-      {"step": 6, "name": "Leaf Verification Batch 4", "txHash": "0x02b450ee57009db0875fdcdd", "time": 6, "gas": 75761},
-      {"step": 7, "name": "Leaf Verification Batch 5", "txHash": "0x02e752189ee3145f1df50c05", "time": 5, "gas": 119783},
-      {"step": 8, "name": "Leaf Verification Batch 6", "txHash": "0x01f416e89e9a2cd22128c13b", "time": 10, "gas": 91242},
-      {"step": 9, "name": "Leaf Verification Batch 7", "txHash": "0x04c5802ec2e499b5a20cb3f4", "time": 5, "gas": 75228},
-      {"step": 10, "name": "Leaf Verification Batch 8", "txHash": "0x064da4c967d8c50af11de602", "time": 5, "gas": 115871},
-      {"step": 11, "name": "Leaf Verification Batch 9", "txHash": "0x0765a1620ddc18fb1dab8650", "time": 8, "gas": 77628},
-      {"step": 12, "name": "Leaf Verification Batch 10", "txHash": "0x054884ec6ba705811c1fd043", "time": 6, "gas": 75253},
-      {"step": 13, "name": "Leaf Verification Batch 11", "txHash": "0x052b63e5425fd40208918148", "time": 5, "gas": 80396},
-      {"step": 14, "name": "Leaf Verification Batch 12", "txHash": "0x03b3678ef705e4754900b7ac", "time": 6, "gas": 104388},
-      {"step": 15, "name": "Leaf Verification Batch 13", "txHash": "0x00760e84fb2dc7e8ccf36205", "time": 7, "gas": 109863},
-      {"step": 16, "name": "Leaf Verification Batch 14", "txHash": "0x036f0f0596b9e154337f357e", "time": 6, "gas": 86688},
-      {"step": 17, "name": "Leaf Verification Batch 15", "txHash": "0x06c1395bfb6c412c8e44f977", "time": 5, "gas": 88497},
-      {"step": 18, "name": "Tree Construction", "txHash": "0x017a91ef586498aa2e5e4fe4", "time": 5, "gas": 892441},
-      {"step": 19, "name": "Finalization", "txHash": "0x06a912bad889fea701dcba8d", "time": 6, "gas": 123456}
+      {
+        "step": 1,
+        "name": "Start Verification",
+        "txHash": "0x0282cb33b84de858ecff7363",
+        "time": 5,
+        "gas": 45231
+      },
+      {
+        "step": 2,
+        "name": "Leaf Verification Batch 0",
+        "txHash": "0x0515558f5419c63b17ce381d",
+        "time": 6,
+        "gas": 72683
+      },
+      {
+        "step": 3,
+        "name": "Leaf Verification Batch 1",
+        "txHash": "0x042f7dc5d04b90b6cd6de08b",
+        "time": 5,
+        "gas": 111410
+      },
+      {
+        "step": 4,
+        "name": "Leaf Verification Batch 2",
+        "txHash": "0x01b5d267daddf2d7039bdd7a",
+        "time": 5,
+        "gas": 126879
+      },
+      {
+        "step": 5,
+        "name": "Leaf Verification Batch 3",
+        "txHash": "0x076db67ec1773630af602d92",
+        "time": 6,
+        "gas": 97620
+      },
+      {
+        "step": 6,
+        "name": "Leaf Verification Batch 4",
+        "txHash": "0x02b450ee57009db0875fdcdd",
+        "time": 6,
+        "gas": 75761
+      },
+      {
+        "step": 7,
+        "name": "Leaf Verification Batch 5",
+        "txHash": "0x02e752189ee3145f1df50c05",
+        "time": 5,
+        "gas": 119783
+      },
+      {
+        "step": 8,
+        "name": "Leaf Verification Batch 6",
+        "txHash": "0x01f416e89e9a2cd22128c13b",
+        "time": 10,
+        "gas": 91242
+      },
+      {
+        "step": 9,
+        "name": "Leaf Verification Batch 7",
+        "txHash": "0x04c5802ec2e499b5a20cb3f4",
+        "time": 5,
+        "gas": 75228
+      },
+      {
+        "step": 10,
+        "name": "Leaf Verification Batch 8",
+        "txHash": "0x064da4c967d8c50af11de602",
+        "time": 5,
+        "gas": 115871
+      },
+      {
+        "step": 11,
+        "name": "Leaf Verification Batch 9",
+        "txHash": "0x0765a1620ddc18fb1dab8650",
+        "time": 8,
+        "gas": 77628
+      },
+      {
+        "step": 12,
+        "name": "Leaf Verification Batch 10",
+        "txHash": "0x054884ec6ba705811c1fd043",
+        "time": 6,
+        "gas": 75253
+      },
+      {
+        "step": 13,
+        "name": "Leaf Verification Batch 11",
+        "txHash": "0x052b63e5425fd40208918148",
+        "time": 5,
+        "gas": 80396
+      },
+      {
+        "step": 14,
+        "name": "Leaf Verification Batch 12",
+        "txHash": "0x03b3678ef705e4754900b7ac",
+        "time": 6,
+        "gas": 104388
+      },
+      {
+        "step": 15,
+        "name": "Leaf Verification Batch 13",
+        "txHash": "0x00760e84fb2dc7e8ccf36205",
+        "time": 7,
+        "gas": 109863
+      },
+      {
+        "step": 16,
+        "name": "Leaf Verification Batch 14",
+        "txHash": "0x036f0f0596b9e154337f357e",
+        "time": 6,
+        "gas": 86688
+      },
+      {
+        "step": 17,
+        "name": "Leaf Verification Batch 15",
+        "txHash": "0x06c1395bfb6c412c8e44f977",
+        "time": 5,
+        "gas": 88497
+      },
+      {
+        "step": 18,
+        "name": "Tree Construction",
+        "txHash": "0x017a91ef586498aa2e5e4fe4",
+        "time": 5,
+        "gas": 892441
+      },
+      {
+        "step": 19,
+        "name": "Finalization",
+        "txHash": "0x06a912bad889fea701dcba8d",
+        "time": 6,
+        "gas": 123456
+      }
     ]
   },
   "block_3": {
@@ -82,25 +424,279 @@
     "totalTime": 289,
     "totalGas": 2680000,
     "transactions": [
-      {"step": 1, "name": "Start Verification", "txHash": "0x02f2b3ff6612cc44ad4a66ee", "time": 4, "gas": 45231},
-      {"step": 2, "name": "Leaf Verification Batch 0", "txHash": "0x01e52641e2de39c4979304e2", "time": 6, "gas": 72683},
-      {"step": 3, "name": "Leaf Verification Batch 1", "txHash": "0x068287238e70310396e4ae2f", "time": 5, "gas": 111410},
-      {"step": 4, "name": "Leaf Verification Batch 2", "txHash": "0x03d9993ea758fe3886829417", "time": 11, "gas": 126879},
-      {"step": 5, "name": "Leaf Verification Batch 3", "txHash": "0x01eb2c1a0ee0bee4b14fd8b4", "time": 7, "gas": 97620},
-      {"step": 6, "name": "Leaf Verification Batch 4", "txHash": "0x0763b71a9a2b4d2a12b3a189", "time": 5, "gas": 75761},
-      {"step": 7, "name": "Leaf Verification Batch 5", "txHash": "0x078a5f7d1cb4a7624838d8ef", "time": 6, "gas": 119783},
-      {"step": 8, "name": "Leaf Verification Batch 6", "txHash": "0x0051fd7c6fc8eb8f1f023607", "time": 5, "gas": 91242},
-      {"step": 9, "name": "Leaf Verification Batch 7", "txHash": "0x07a52bddaea330647a1bb917", "time": 6, "gas": 75228},
-      {"step": 10, "name": "Leaf Verification Batch 8", "txHash": "0x057eded6ba32588f38c0efc7", "time": 6, "gas": 115871},
-      {"step": 11, "name": "Leaf Verification Batch 9", "txHash": "0x07ba84bb9d03ae26ef23f4f6", "time": 6, "gas": 77628},
-      {"step": 12, "name": "Leaf Verification Batch 10", "txHash": "0x0606d5b23de63b26eff5e097", "time": 16, "gas": 75253},
-      {"step": 13, "name": "Leaf Verification Batch 11", "txHash": "0x060e4de1007ce71f5fd8d3ab", "time": 5, "gas": 80396},
-      {"step": 14, "name": "Leaf Verification Batch 12", "txHash": "0x0357d27c65f2c37b20c18bb8", "time": 5, "gas": 104388},
-      {"step": 15, "name": "Leaf Verification Batch 13", "txHash": "0x05a8b5f362fe529cd1fc8628", "time": 7, "gas": 109863},
-      {"step": 16, "name": "Leaf Verification Batch 14", "txHash": "0x07ed96ed3d81d4d56ac51f83", "time": 6, "gas": 86688},
-      {"step": 17, "name": "Leaf Verification Batch 15", "txHash": "0x02b713eb895241aac8766266", "time": 5, "gas": 88497},
-      {"step": 18, "name": "Tree Construction", "txHash": "0x02543858c34e8d90e1992fe2", "time": 6, "gas": 892441},
-      {"step": 19, "name": "Finalization", "txHash": "0x04d95603c4007d9e23cfd342", "time": 6, "gas": 123456}
+      {
+        "step": 1,
+        "name": "Start Verification",
+        "txHash": "0x02f2b3ff6612cc44ad4a66ee",
+        "time": 4,
+        "gas": 45231
+      },
+      {
+        "step": 2,
+        "name": "Leaf Verification Batch 0",
+        "txHash": "0x01e52641e2de39c4979304e2",
+        "time": 6,
+        "gas": 72683
+      },
+      {
+        "step": 3,
+        "name": "Leaf Verification Batch 1",
+        "txHash": "0x068287238e70310396e4ae2f",
+        "time": 5,
+        "gas": 111410
+      },
+      {
+        "step": 4,
+        "name": "Leaf Verification Batch 2",
+        "txHash": "0x03d9993ea758fe3886829417",
+        "time": 11,
+        "gas": 126879
+      },
+      {
+        "step": 5,
+        "name": "Leaf Verification Batch 3",
+        "txHash": "0x01eb2c1a0ee0bee4b14fd8b4",
+        "time": 7,
+        "gas": 97620
+      },
+      {
+        "step": 6,
+        "name": "Leaf Verification Batch 4",
+        "txHash": "0x0763b71a9a2b4d2a12b3a189",
+        "time": 5,
+        "gas": 75761
+      },
+      {
+        "step": 7,
+        "name": "Leaf Verification Batch 5",
+        "txHash": "0x078a5f7d1cb4a7624838d8ef",
+        "time": 6,
+        "gas": 119783
+      },
+      {
+        "step": 8,
+        "name": "Leaf Verification Batch 6",
+        "txHash": "0x0051fd7c6fc8eb8f1f023607",
+        "time": 5,
+        "gas": 91242
+      },
+      {
+        "step": 9,
+        "name": "Leaf Verification Batch 7",
+        "txHash": "0x07a52bddaea330647a1bb917",
+        "time": 6,
+        "gas": 75228
+      },
+      {
+        "step": 10,
+        "name": "Leaf Verification Batch 8",
+        "txHash": "0x057eded6ba32588f38c0efc7",
+        "time": 6,
+        "gas": 115871
+      },
+      {
+        "step": 11,
+        "name": "Leaf Verification Batch 9",
+        "txHash": "0x07ba84bb9d03ae26ef23f4f6",
+        "time": 6,
+        "gas": 77628
+      },
+      {
+        "step": 12,
+        "name": "Leaf Verification Batch 10",
+        "txHash": "0x0606d5b23de63b26eff5e097",
+        "time": 16,
+        "gas": 75253
+      },
+      {
+        "step": 13,
+        "name": "Leaf Verification Batch 11",
+        "txHash": "0x060e4de1007ce71f5fd8d3ab",
+        "time": 5,
+        "gas": 80396
+      },
+      {
+        "step": 14,
+        "name": "Leaf Verification Batch 12",
+        "txHash": "0x0357d27c65f2c37b20c18bb8",
+        "time": 5,
+        "gas": 104388
+      },
+      {
+        "step": 15,
+        "name": "Leaf Verification Batch 13",
+        "txHash": "0x05a8b5f362fe529cd1fc8628",
+        "time": 7,
+        "gas": 109863
+      },
+      {
+        "step": 16,
+        "name": "Leaf Verification Batch 14",
+        "txHash": "0x07ed96ed3d81d4d56ac51f83",
+        "time": 6,
+        "gas": 86688
+      },
+      {
+        "step": 17,
+        "name": "Leaf Verification Batch 15",
+        "txHash": "0x02b713eb895241aac8766266",
+        "time": 5,
+        "gas": 88497
+      },
+      {
+        "step": 18,
+        "name": "Tree Construction",
+        "txHash": "0x02543858c34e8d90e1992fe2",
+        "time": 6,
+        "gas": 892441
+      },
+      {
+        "step": 19,
+        "name": "Finalization",
+        "txHash": "0x04d95603c4007d9e23cfd342",
+        "time": 6,
+        "gas": 123456
+      }
     ]
+  },
+  "block_4": {
+    "transactions": [
+      {
+        "step": 1,
+        "name": "start",
+        "txHash": "0x07f48c86638933e128096d4947c3241aa5b07202b697fef9fc214cdcccfa6bec",
+        "time": 6,
+        "gas": 45000
+      },
+      {
+        "step": 2,
+        "name": "batch[0]",
+        "txHash": "0x05cc628ed6f007c089bba34dbc00f4b5f2ff91f27965f334190299ce2714646b",
+        "time": 12,
+        "gas": 100000
+      },
+      {
+        "step": 3,
+        "name": "batch[1]",
+        "txHash": "0x03ee4245b7e5dbbdbe3de9ee36a6d4566fafa4e3fb5c4195050f803ea2283e73",
+        "time": 7,
+        "gas": 100000
+      },
+      {
+        "step": 4,
+        "name": "batch[2]",
+        "txHash": "0x02bb2ff50230cc179ccba47265331f8efe80741c198d46c3bc1de46192a5a309",
+        "time": 6,
+        "gas": 100000
+      },
+      {
+        "step": 5,
+        "name": "batch[3]",
+        "txHash": "0x065b2b3984f3f231068183af473d266ee57d50f0fc19e0d98afcaa088a6b9d2f",
+        "time": 7,
+        "gas": 100000
+      },
+      {
+        "step": 6,
+        "name": "batch[4]",
+        "txHash": "0x078a86989f814e13bc4b3aeebeb570ab859bea5f46b01b9de637a606f56fa1e7",
+        "time": 6,
+        "gas": 100000
+      },
+      {
+        "step": 7,
+        "name": "batch[5]",
+        "txHash": "0x028529468548c2e95674f494a9c67603221280b166af4ec3cc3ec5dc12823055",
+        "time": 6,
+        "gas": 100000
+      },
+      {
+        "step": 8,
+        "name": "batch[6]",
+        "txHash": "0x00f65ba519a57f91700176d915f0daf120a7bf81a987db7ebc1101b958b2d9c1",
+        "time": 6,
+        "gas": 100000
+      },
+      {
+        "step": 9,
+        "name": "batch[7]",
+        "txHash": "0x02f981a8d30d5a959b973edcf33d96a76baacf4636780883bae5c7c62670882a",
+        "time": 11,
+        "gas": 100000
+      },
+      {
+        "step": 10,
+        "name": "batch[8]",
+        "txHash": "0x05b62c4e9e326af096755768fccb0fbe44f8b6b0922539efb667fb2e85b39ddc",
+        "time": 8,
+        "gas": 100000
+      },
+      {
+        "step": 11,
+        "name": "batch[9]",
+        "txHash": "0x06bf1c00efa51b731977ad7bb2ccc991456fc0363a00f7df2b83034d409e940a",
+        "time": 6,
+        "gas": 100000
+      },
+      {
+        "step": 12,
+        "name": "batch[10]",
+        "txHash": "0x03b51eeb9f0865cfd1d2583d1517d521cd9713d39fe27761c3404516e4b45c0a",
+        "time": 7,
+        "gas": 100000
+      },
+      {
+        "step": 13,
+        "name": "batch[11]",
+        "txHash": "0x02d6aca98da20eb903caf7d79185910da2997c3670a2e53aa2e9a3dfc1f9cec5",
+        "time": 5,
+        "gas": 100000
+      },
+      {
+        "step": 14,
+        "name": "batch[12]",
+        "txHash": "0x04e985d18d8c106c00b8480dae6e6a9e1be89609f24b8898c9ba757e2dfe5898",
+        "time": 6,
+        "gas": 100000
+      },
+      {
+        "step": 15,
+        "name": "batch[13]",
+        "txHash": "0x031be61f11ecbb6a7c575ea6c19550a9dc48e8b9d363a3e948cc20bd03d3512f",
+        "time": 5,
+        "gas": 100000
+      },
+      {
+        "step": 16,
+        "name": "batch[14]",
+        "txHash": "0x030014dfc7f46f0249f8442513a52d9d9815f7e1414f739330e4834b81dd4fc1",
+        "time": 8,
+        "gas": 100000
+      },
+      {
+        "step": 17,
+        "name": "batch[15]",
+        "txHash": "0x03c719590ddeb981fedeb6d08d18adc47eb5eefe87878fd5807b8de72e2ceda4",
+        "time": 5,
+        "gas": 100000
+      },
+      {
+        "step": 18,
+        "name": "tree",
+        "txHash": "0x0782e3fc4b046786368aa3b58dcfc5fde7f1239fc25569a331807c7caca6e6b2",
+        "time": 7,
+        "gas": 890000
+      },
+      {
+        "step": 19,
+        "name": "finalize",
+        "txHash": "0x03c468aa833cec9cdafd05a7ae50b5760a5b6db2b23f2d31ea50dc16dd8ded0a",
+        "time": 11,
+        "gas": 120000
+      }
+    ],
+    "verification_id": "0x139800c8af9bcb6156678ac8959a5464acb41722e63c242e274327c3",
+    "totalTime": 135,
+    "totalGas": 2655000
   }
 }

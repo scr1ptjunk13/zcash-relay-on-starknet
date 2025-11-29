@@ -34,13 +34,13 @@ node_modules/
 .env
 .env.local
 
-## Frontend
-# frontend/dist/
-# frontend/.vite/
+# Frontend
+frontend/dist/
+frontend/.vite/
 
-# # Test coverage
-# coverage/
-# *.lcov
+# Test coverage
+coverage/
+*.lcov
 
 # # Temporary files
 *.tmp
