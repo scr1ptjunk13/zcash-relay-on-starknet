@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/zulu-logo.png" alt="ZULU Logo" width="200"/>
+  <img src="./logo.png" alt="ZULU Logo" width="200"/>
 </p>
 
 <h1 align="center">Z.U.L.U.</h1>
@@ -60,8 +60,6 @@ ZULU brings Zcash to Starknet trustlessly. Unlike centralized bridges that rely 
 Equihash verification is split across **11 transactions** to fit within Starknet gas limits:
 
 ![Multi-TX Verification](./multi-tx.png)
-
-See [ARCHITECTURE.md](./ARCHITECTURE.md) for more details.
 
 ---
 
