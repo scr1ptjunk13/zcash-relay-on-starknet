@@ -28,7 +28,7 @@ ZULU is a **trustless Zcash block relay** on Starknet. It enables on-chain verif
 
 ## Disclaimer
 
-This codebase is an experimental PoC built for the Blockchain for Good hackathon. It has not undergone a professional audit. Use at your own risk.
+This codebase is an experimental PoC built for the **Zypherpunk Starknet Track 2025**. It has not undergone a professional audit. Use at your own risk.
 
 ---
 
@@ -51,26 +51,17 @@ ZULU brings Zcash to Starknet trustlessly. Unlike centralized bridges that rely 
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                              ZULU Architecture                               │
-└─────────────────────────────────────────────────────────────────────────────┘
+### System Overview
 
-┌──────────────┐     ┌──────────────┐     ┌──────────────────────────────────┐
-│   Frontend   │────▶│   Backend    │────▶│         Starknet Sepolia         │
-│   (React)    │     │  (Express)   │     │                                  │
-└──────────────┘     └──────────────┘     │  ┌────────────────────────────┐  │
-       │                    │              │  │      ZULU Relay Contract   │  │
-       │                    │              │  │                            │  │
-       ▼                    ▼              │  │  • Block Registration      │  │
-┌──────────────┐     ┌──────────────┐     │  │  • Equihash Verification   │  │
-│  Zcash RPC   │     │   Scripts    │     │  │  • Chain Management        │  │
-│  (Mainnet)   │     │  (Python)    │     │  │  • TX Inclusion Proofs     │  │
-└──────────────┘     └──────────────┘     │  └────────────────────────────┘  │
-                                          └──────────────────────────────────┘
-```
+![Overall Architecture](./overall-architecture.png)
 
-See [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed diagrams.
+### Multi-Transaction Block Verification
+
+Equihash verification is split across **11 transactions** to fit within Starknet gas limits:
+
+![Multi-TX Verification](./multi-tx.png)
+
+See [ARCHITECTURE.md](./ARCHITECTURE.md) for more details.
 
 ---
 
@@ -215,7 +206,7 @@ scarb build
 ### Run Tests
 
 ```bash
-scarb test
+snforge test
 ```
 
 ### Deploy Contract
@@ -309,5 +300,5 @@ MIT License - see [LICENSE](./LICENSE) for details.
 ---
 
 <p align="center">
-  <i>Built with ❤️ for the Blockchain for Good Hackathon</i>
+  <i>Built with ❤️ for the Blockchain for Zypherpunk Hackathon</i>
 </p>
