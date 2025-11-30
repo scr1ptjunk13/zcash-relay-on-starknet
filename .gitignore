@@ -1,5 +1,4 @@
 ## Project-specific
-docs/
 target/
 Scarb.lock
 TESTNET_ACCOUNT.txt
@@ -46,4 +45,4 @@ coverage/
 *.tmp
 *.bak
 
-.md
+*.md

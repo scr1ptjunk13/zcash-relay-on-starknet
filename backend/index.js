@@ -11,8 +11,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const PORT = 3001;
-const WS_PORT = 3002;
+const PORT = process.env.PORT || 3001;
 
 // Load env vars
 require('dotenv').config({ path: '../.env' });
@@ -24,8 +23,7 @@ const provider = new RpcProvider({
 const VERIFICATIONS_FILE = path.join(__dirname, '../frontend/src/data/verifications.json');
 const RELAY_SCRIPT = path.join(__dirname, '../scripts/relay-block.sh');
 
-const wss = new WebSocket.Server({ port: WS_PORT });
-console.log('WebSocket server on ws://localhost:' + WS_PORT);
+// WebSocket server will be attached to HTTP server after app.listen()
 
 function broadcast(data) {
   wss.clients.forEach(client => {
@@ -369,7 +367,11 @@ app.get('/api/merkle-proof', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log('Backend on http://localhost:' + PORT);
   console.log('Queue system active - handles concurrent requests');
 });
+
+// Attach WebSocket to same HTTP server (required for Render/single-port hosting)
+wss = new WebSocket.Server({ server });
+console.log('WebSocket attached to HTTP server on port ' + PORT);

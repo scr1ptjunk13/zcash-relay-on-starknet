@@ -4,8 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, CheckCircle2, Loader2, XCircle } from "lucide-react";
 
-const BACKEND_URL = "http://localhost:3001";
-const WS_URL = "ws://localhost:3002";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
+// WebSocket uses same server, just different protocol
+const WS_URL = BACKEND_URL.replace(/^http/, 'ws');
 
 // Strip ANSI color codes from terminal output
 const stripAnsi = (str: string) => str.replace(/\x1b\[[0-9;]*m/g, '');

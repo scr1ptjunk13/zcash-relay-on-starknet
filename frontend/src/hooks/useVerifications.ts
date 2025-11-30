@@ -29,7 +29,8 @@ export interface BlockVerification {
   transactions: VerificationStep[];
 }
 
-const BACKEND_URL = "http://localhost:3001";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
+const WS_URL = BACKEND_URL.replace(/^http/, 'ws');
 
 // Get verification data for a specific block (from backend API for real-time data)
 export function useBlockVerification(height: number | undefined) {
@@ -103,7 +104,7 @@ export function useVerificationWebSocket(
     // Only connect if we have callbacks
     if (!onProgress && !onComplete) return;
     
-    const ws = new WebSocket('ws://localhost:3002');
+    const ws = new WebSocket(WS_URL);
     
     ws.onopen = () => {
       console.log('[WS] Connected');
