@@ -170,7 +170,7 @@ function runVerification(targetHeight) {
       const output = data.toString();
       console.log('[RELAY]', output.trim());
       
-      const txMatch = output.match(/\[TX (\d+)\/19\]/);
+      const txMatch = output.match(/\[TX (\d+)\/11\]/);
       const hashMatch = output.match(/(0x[a-f0-9]{64})/i);
       
       if (txMatch) {

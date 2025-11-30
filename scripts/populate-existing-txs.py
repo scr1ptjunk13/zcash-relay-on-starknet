@@ -18,8 +18,6 @@ STEP_NAMES = [
     "start",
     "batch[0]", "batch[1]", "batch[2]", "batch[3]",
     "batch[4]", "batch[5]", "batch[6]", "batch[7]",
-    "batch[8]", "batch[9]", "batch[10]", "batch[11]",
-    "batch[12]", "batch[13]", "batch[14]", "batch[15]",
     "tree",
     "finalize"
 ]
@@ -64,7 +62,7 @@ def main():
     print("=" * 50)
     print()
     print("Get TX hashes from Starkscan:")
-    print("https://sepolia.starkscan.co/contract/0x05dba82c62d5f37161581bc0380eb98cf2a401d84e4fc5c5eb27000bf2b52ce5#transactions")
+    print("https://sepolia.starkscan.co/contract/0x0546f738f87885a936cb8df8085b4b3fdc9bf1be6449cf5f9967c4a5892a12dc#transactions")
     print()
     
     while True:
@@ -80,12 +78,12 @@ def main():
         
         vid = input(f"  Verification ID for block {block_num} (or press Enter to skip): ").strip()
         
-        print(f"  Enter 19 TX hashes for block {block_num}, one per line:")
+        print(f"  Enter 11 TX hashes for block {block_num}, one per line:")
         print(f"  (Copy from Starkscan, oldest to newest for this block)")
         
         tx_hashes = []
-        for i in range(19):
-            tx = input(f"    TX {i+1}/19 ({STEP_NAMES[i]}): ").strip()
+        for i in range(11):
+            tx = input(f"    TX {i+1}/11 ({STEP_NAMES[i]}): ").strip()
             tx_hashes.append(tx)
         
         populate_block(block_num, tx_hashes, vid)

@@ -154,7 +154,7 @@ const Verify = () => {
               {isVerifying ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Verifying... ({currentStep}/19)
+                  Verifying... ({currentStep}/11)
                 </>
               ) : (
                 "Start Verification"
@@ -191,12 +191,12 @@ const Verify = () => {
           <Card className="p-4 bg-card border-border mb-6">
             <div className="flex justify-between text-sm mb-2">
               <span>Progress</span>
-              <span>{currentStep}/19 transactions</span>
+              <span>{currentStep}/11 transactions</span>
             </div>
             <div className="w-full bg-muted rounded-full h-2">
               <div 
                 className="bg-primary h-2 rounded-full transition-all duration-300"
-                style={{ width: `${(currentStep / 19) * 100}%` }}
+                style={{ width: `${(currentStep / 11) * 100}%` }}
               />
             </div>
           </Card>
@@ -207,7 +207,7 @@ const Verify = () => {
           <div>
             <p className="font-medium mb-1">Verification Process</p>
             <p className="text-sm text-muted-foreground">
-              Verifying a block requires 19 transactions and costs approximately 0.003 STRK. 
+              Verifying a block requires 11 transactions and costs approximately 40 STRK on testnet. 
               The process takes ~5 minutes. Make sure the backend is running.
             </p>
           </div>

@@ -33,10 +33,10 @@ const Docs = () => {
           <Card className="p-6 bg-card border-border">
             <h2 className="text-2xl font-semibold mb-4">How It Works</h2>
             <div className="space-y-4 text-muted-foreground">
-              <p>The verification process consists of 19 on-chain transactions:</p>
+              <p>The verification process consists of 11 on-chain transactions:</p>
               <ol className="list-decimal list-inside space-y-2 ml-4">
                 <li>Initialize verification with block header</li>
-                <li>Verify 16 batches of Equihash solution elements</li>
+                <li>Verify 8 batches of Equihash solution elements (64 leaves each)</li>
                 <li>Construct and validate the Merkle tree</li>
                 <li>Finalize and add to canonical chain</li>
               </ol>

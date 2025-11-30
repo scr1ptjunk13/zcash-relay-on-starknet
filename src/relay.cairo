@@ -16,6 +16,10 @@ pub mod ZcashRelay {
     use crate::utils::double_sha256::double_sha256_block_header;
     use core::num::traits::zero::Zero;
     use crate::zcash::verification;
+    
+    // Must match verification.cairo constants
+    const LEAVES_PER_BATCH: u32 = 64;
+    const NUM_LEAF_BATCHES: u32 = 8;
     use crate::zcash::equihash::{indices_from_minimal_bytes, EquihashNode, is_zero_prefix, collision_byte_length};
     use core::poseidon::poseidon_hash_span;
     use crate::utils::bit_shifts::pow2;
@@ -294,7 +298,7 @@ pub mod ZcashRelay {
             batch_id: u32,
             header: ZcashBlockHeader
         ) {
-            assert(batch_id < 16, 'Invalid batch_id');
+            assert(batch_id < NUM_LEAF_BATCHES, 'Invalid batch_id');
             assert(starknet::get_caller_address() == self.verification_initiators.read(verification_id), 'Not initiator');
             assert(get_block_timestamp() < self.verification_deadlines.read(verification_id), 'Verification expired');
             
@@ -302,10 +306,12 @@ pub mod ZcashRelay {
             let batch_bit: u256 = 1_u256 * pow2(batch_id).into();
             assert((batches & batch_bit) == 0, 'Batch already verified');
             
+            // Only read the indices we need for this batch (not all 512!)
+            let start_idx = batch_id * LEAVES_PER_BATCH;
             let mut indices = array![];
             let mut i: u32 = 0;
-            while i < 512 {
-                indices.append(self.verification_indices.read((verification_id, i)));
+            while i < LEAVES_PER_BATCH {
+                indices.append(self.verification_indices.read((verification_id, start_idx + i)));
                 i += 1;
             };
             
@@ -332,11 +338,11 @@ pub mod ZcashRelay {
                 indices.span()
             );
             
-            assert(nodes.len() == 32, 'Invalid leaf count');
+            assert(nodes.len() == LEAVES_PER_BATCH.try_into().unwrap(), 'Invalid leaf count');
             
-            let start_leaf_idx = batch_id * 32;
+            let start_leaf_idx = batch_id * LEAVES_PER_BATCH;
             let mut j: u32 = 0;
-            while j < 32 {
+            while j < LEAVES_PER_BATCH {
                 let leaf_idx = start_leaf_idx + j;
                 let node = nodes[j.try_into().unwrap()];
                 
@@ -360,7 +366,8 @@ pub mod ZcashRelay {
         ) {
             assert(starknet::get_caller_address() == self.verification_initiators.read(verification_id), 'Not initiator');
             assert(get_block_timestamp() < self.verification_deadlines.read(verification_id), 'Verification expired');
-            assert(self.verification_batches.read(verification_id) == 0xFFFF, 'Not all batches complete');
+            // 8 batches: bits 0-7 set = 0xFF
+            assert(self.verification_batches.read(verification_id) == 0xFF, 'Not all batches complete');
 
             // reconstruct leaves from stored hashes
             let mut leaves: Array<EquihashNode> = array![];

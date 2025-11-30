@@ -1,11 +1,9 @@
-// =======================
 // Equihash helpers on top of our Blake2b
-// =======================
 
 use core::array::ArrayTrait;
 use core::traits::{Into, TryInto};
 use crate::utils::hash::Digest;
-use crate::utils::blake2b::blake2b_hash;
+use crate::utils::blake2b_ultra::{blake2b_equihash, blake2b_equihash_compress_first, blake2b_equihash_finish, Blake2bCachedState};
 use crate::utils::bit_shifts::{shr_u64 as shr64, shl_u64 as shl64, pow2};
 
 // Equihash constants for Zcash
@@ -97,11 +95,8 @@ fn equihash_hash_index(header: Array<u8>, n: u32, k: u32, idx: u32) -> Span<u8> 
     let idx_span: Span<u8> = u32_to_le_bytes_array(hash_input_index);
     input.append_span(idx_span);
 
-    // personalization
-    let pers: [u8; 16] = equihash_personalization(n, k);
-
-    // full Blake2b output, length = indices_per * (n / 8)
-    let full: Array<u8> = blake2b_hash(input, outlen, pers);
+    // Use precomputed Equihash init (n=200, k=9, outlen=50)
+    let full: Array<u8> = blake2b_equihash(input);
 
     // Take the subindex-th chunk of size collision_bytes
     let full_span = full.span();
@@ -110,9 +105,7 @@ fn equihash_hash_index(header: Array<u8>, n: u32, k: u32, idx: u32) -> Span<u8> 
     full_span.slice(start, collision_bytes)
 }
 
-// =====================
 // Optimized Batch Processing (Hash Deduplication)
-// =====================
 
 /// Compute unique Blake2b hashes for a batch of indices.
 /// For Zcash (n=200), indices_per_hash = 2, so indices 0,1 share hash, 2,3 share hash, etc.
@@ -132,49 +125,61 @@ pub fn compute_unique_hashes(
     indices: Span<u32>
 ) -> Array<(u32, Array<u8>)> {
     let indices_per: u32 = equihash_indices_per_hash_output(n);
-    let collision_bytes: u32 = n / 8_u32;
-    let outlen: u32 = indices_per * collision_bytes;
-    let pers: [u8; 16] = equihash_personalization(n, k);
+    let _collision_bytes: u32 = n / 8_u32;
     
-    // Find unique hash_input_indices
+    // Find unique hash_input_indices with fast-path optimization
     let mut unique_indices: Array<u32> = array![];
+    let mut last_added: u32 = 0xFFFFFFFF; // Track last to skip consecutive duplicates
     let mut i: usize = 0;
     
     while i < indices.len() {
-        let idx = *indices[i];
-        let hash_input_index = idx / indices_per;
+        let hash_input_index = *indices[i] / indices_per;
         
-        // Check if already in unique list
-        let mut found = false;
-        let mut j: usize = 0;
-        while j < unique_indices.len() {
-            if *unique_indices[j] == hash_input_index {
-                found = true;
-                break;
+        // Fast path: if same as last added, skip (common case in Equihash)
+        if hash_input_index != last_added {
+            // Check if already in unique list (backward from end for locality)
+            let mut found = false;
+            let mut j: usize = unique_indices.len();
+            while j > 0 {
+                j -= 1;
+                if *unique_indices[j] == hash_input_index {
+                    found = true;
+                    break;
+                }
+            };
+            
+            if !found {
+                unique_indices.append(hash_input_index);
+                last_added = hash_input_index;
             }
-            j += 1;
-        };
-        
-        if !found {
-            unique_indices.append(hash_input_index);
         }
         i += 1;
     };
     
-    // Compute Blake2b for each unique hash_input_index
+    // OPTIMIZATION: Compute state after first block ONCE, reuse for all hashes!
+    // header is 140 bytes. First 128 bytes are shared across ALL Blake2b calls.
+    // Input = 140 (header) + 4 (index) = 144 bytes
+    // Block 1: bytes 0-127, Block 2: bytes 128-143 (12 header + 4 index) + padding
+    let header_span = header.span();
+    assert(header_span.len() >= 140, 'Header too short for cache');
+    let first_128 = header_span.slice(0, 128);
+    let header_tail = header_span.slice(128, 12);  // bytes 128-139 (12 bytes)
+    
+    // Compute intermediate state ONCE
+    let cached_state: Blake2bCachedState = blake2b_equihash_compress_first(first_128);
+    
+    // Compute Blake2b for each unique hash_input_index (only second block!)
     let mut cached_hashes: Array<(u32, Array<u8>)> = array![];
     let mut i: usize = 0;
     
     while i < unique_indices.len() {
         let hash_input_index = *unique_indices[i];
         
-        // Build input: header || le_u32(hash_input_index)
-        let mut input = header.clone();
+        // Only need to provide the 4-byte index - first block already processed!
         let idx_span: Span<u8> = u32_to_le_bytes_array(hash_input_index);
-        input.append_span(idx_span);
         
-        // Compute Blake2b
-        let hash_output: Array<u8> = blake2b_hash(input, outlen, pers);
+        // Finish hash from cached state (only 1 compress instead of 2!)
+        let hash_output: Array<u8> = blake2b_equihash_finish(@cached_state, header_tail, idx_span);
         
         cached_hashes.append((hash_input_index, hash_output));
         i += 1;
@@ -183,20 +188,20 @@ pub fn compute_unique_hashes(
     cached_hashes
 }
 
-/// Find cached hash for a given hash_input_index
+/// Find cached hash for a given hash_input_index (search from end for locality)
 fn find_cached_hash(
     cached_hashes: @Array<(u32, Array<u8>)>,
     hash_input_index: u32
 ) -> Span<u8> {
-    let mut i: usize = 0;
-    while i < cached_hashes.len() {
+    // Search from end - recently added hashes more likely to be accessed
+    let mut i: usize = cached_hashes.len();
+    while i > 0 {
+        i -= 1;
         let (cached_idx, cached_hash) = cached_hashes[i];
         if *cached_idx == hash_input_index {
             return cached_hash.span();
         }
-        i += 1;
     };
-    // Should never reach here if used correctly
     panic!("Hash not found in cache")
 }
 
@@ -226,7 +231,7 @@ pub fn make_leaf_from_cached(
     let start: usize = (subindex * collision_bytes).try_into().unwrap();
     let hash_bytes = full_hash.slice(start, collision_bytes.try_into().unwrap());
     
-    // Expand array (same as original make_leaf)
+    // Expand array
     let bit_len: u32 = collision_bit_length(n, k);
     let expanded: Array<u8> = expand_array(hash_bytes, bit_len);
     
@@ -561,53 +566,50 @@ pub fn indices_from_minimal_bytes(n: u32, k: u32, minimal: Array<u8>) -> (bool, 
 
     (true, indices)
 }
-// Expand an array of bytes into elements of size `bit_len` bits, each
-// output as `width = ceil(bit_len/8)` big-endian bytes.
-//
-// This mirrors Zcash's minimal::expand_array(data, bit_len, 0).
-fn expand_array(bytes: Span<u8>, bit_len: u32) -> Array<u8> {
+// Expand array OPTIMIZED for Zcash (n=200, k=9): bit_len=20, width=3
+// Hardcoded for performance - avoids function calls and dynamic computation
+fn expand_array(bytes: Span<u8>, _bit_len: u32) -> Array<u8> {
     let mut out = array![];
+    
+    // For Zcash: bit_len=20, mask=0x100000 (2^20), width=3
+    let mut acc_value: u64 = 0;
+    let mut acc_bits: u32 = 0;
 
-    let width: u32 = (bit_len + 7_u32) / 8_u32;
-    let width_usize: usize = width;
-    let mask: u64 = shl64(1_u64, bit_len);
+    let mut i: usize = 0;
+    while i < bytes.len() {
+        // Shift in 8 bits (inline: acc_value = acc_value * 256 + byte)
+        acc_value = acc_value * 256 + (*bytes[i]).into();
+        acc_bits += 8;
 
-    let mut acc_value: u64 = 0_u64;
-    let mut acc_bits: u32 = 0_u32;
-
-    let mut i: usize = 0_usize;
-    for b in bytes {
-        let b_u64: u64 = (*b).into();
-
-        // Shift in 8 bits
-        acc_value = shl64(acc_value, 8_u32) | b_u64;
-        acc_bits = acc_bits + 8_u32;
-
-        // While we have at least one element
-        while acc_bits >= bit_len {
-            let shift: u32 = acc_bits - bit_len;
-            let elem: u64 = shr64(acc_value, shift) % mask;
-
-            acc_bits = acc_bits - bit_len;
-            acc_value = if shift == 0_u32 {
-                0_u64
+        // Extract 20-bit elements while we have enough bits
+        while acc_bits >= 20 {
+            let shift = acc_bits - 20;
+            // elem = (acc_value >> shift) & 0xFFFFF
+            let divisor: u64 = if shift == 0 { 1 } 
+                else if shift == 4 { 16 }
+                else if shift == 8 { 256 }
+                else if shift == 12 { 4096 }
+                else if shift == 16 { 65536 }
+                else if shift == 20 { 1048576 }
+                else if shift == 24 { 16777216 }
+                else { 1 }; // shouldn't happen for this input size
+            let elem: u64 = (acc_value / divisor) & 0xFFFFF;
+            
+            acc_bits -= 20;
+            // Keep only lower 'shift' bits
+            if shift == 0 {
+                acc_value = 0;
             } else {
-                acc_value % shl64(1_u64, shift)
-            };
-
-            // write element as `width` big-endian bytes
-            let mut j: usize = width_usize;
-            while j > 0_usize {
-                j = j - 1_usize;
-                let shift_bytes: u32 = j * 8_usize;
-                let byte_u64: u64 = shr64(elem, shift_bytes) % 256_u64;
-                let byte: u8 = byte_u64.try_into().unwrap();
-                out.append(byte);
+                acc_value = acc_value & (divisor - 1);
             }
-        }
 
-        i = i + 1_usize;
-    }
+            // Write 3 bytes big-endian (inline)
+            out.append(((elem / 65536) & 0xFF).try_into().unwrap());
+            out.append(((elem / 256) & 0xFF).try_into().unwrap());
+            out.append((elem & 0xFF).try_into().unwrap());
+        }
+        i += 1;
+    };
 
     out
 }

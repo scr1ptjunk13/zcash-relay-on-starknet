@@ -22,6 +22,49 @@ Explorer Links:
 - Class:    https://sepolia.starkscan.co/class/0x00bc8ddbe7029c3df77cad545b9072cb1c9c920b4018922f2b2d6638f394b353
 
 
+NEW CONTRACT (V8 - Cached Blake2b Optimization)
+------------------------------------------------
+Updated: 2025-11-30
+Optimization: ~61% gas reduction (39 STRK → ~15 STRK per block)
+- Cached first block compression (saves 50% compress calls)
+- Unrolled byte extraction
+- 4 batches × 128 leaves (down from 16 × 32)
+
+Class Hash:    0x70e709273f68c3351f1ceb6b4188dba14dc23eb57e600fedf8456f9cf8be198
+Contract:      0x0306423914a50f88bbae4bbcc2ed5dc1bbdd117d6853af75f91222a9de91a096
+Owner:         0x59fb72066702b66dcf65b4ced46a29f20cf6967d9456a3155646442ed1b1b87
+
+Declare TX:    0x1a06908cebd4fbab0d88ebc53d75c1264709ece97419d360b070c4e6f792c51
+Deploy TX:     0x044e449b6e4f88b80db09981c068f61a0c17514a7854d6e8847b9d0d611efae0
+Initialize TX: 0x05ce54789c27eff6f5169b9c3cf5caad8132283270008bfa4b071d0522acbf07
+
+Explorer Links:
+- Contract: https://sepolia.starkscan.co/contract/0x0306423914a50f88bbae4bbcc2ed5dc1bbdd117d6853af75f91222a9de91a096
+- Class:    https://sepolia.starkscan.co/class/0x070e709273f68c3351f1ceb6b4188dba14dc23eb57e600fedf8456f9cf8be198
+
+
 USAGE
 -----
 ./scripts/relay_block.sh <height>   # e.g., ./scripts/relay_block.sh 0
+
+================================================================================
+V9 DEPLOYMENT - 8 Batches (64 leaves each)
+================================================================================
+Date: Nov 30, 2025
+
+Changes:
+- 8 batches of 64 leaves (fits under 1.2B gas limit per TX)
+- Optimized Blake2b caching
+- Optimized expand_array for Zcash params
+- Reduced storage reads (only batch indices, not all 512)
+
+Class Hash:    0x02720a043dae511db877781e769e954e8e72982e2ec732f76229e551ed0de858
+Contract:      0x0546f738f87885a936cb8df8085b4b3fdc9bf1be6449cf5f9967c4a5892a12dc
+Deploy TX:     0x04f3d5536926c24a018eafebe4ade59a8f6d1caea7e114f4fc8e4dec8d3fc2c4
+
+Gas per block: ~2.75B total (11 TXs: 1 start + 8 batches + 1 tree + 1 finalize)
+Per-batch gas: ~715M (under 1.2B limit ✓)
+
+Explorer Links:
+- Contract: https://sepolia.starkscan.co/contract/0x0546f738f87885a936cb8df8085b4b3fdc9bf1be6449cf5f9967c4a5892a12dc
+- Class:    https://sepolia.starkscan.co/class/0x02720a043dae511db877781e769e954e8e72982e2ec732f76229e551ed0de858

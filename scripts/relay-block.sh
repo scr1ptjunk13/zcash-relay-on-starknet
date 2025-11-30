@@ -10,7 +10,7 @@ set +H
 MAX_RETRIES=5
 RETRY_DELAY=10
 BATCH_DELAY=8
-TOTAL_TXS=19
+TOTAL_TXS=11
 
 # Colors
 RED='\033[0;31m'
@@ -23,7 +23,7 @@ DIM='\033[2m'
 NC='\033[0m'
 
 # Contract config
-CONTRACT="0x05dba82c62d5f37161581bc0380eb98cf2a401d84e4fc5c5eb27000bf2b52ce5"
+CONTRACT="0x0546f738f87885a936cb8df8085b4b3fdc9bf1be6449cf5f9967c4a5892a12dc"
 ACCOUNT="testnet_account"
 NETWORK="sepolia"
 
@@ -203,9 +203,9 @@ relay_single_block() {
         sleep 12
     fi
     
-    # TX 2-17: Batches
+    # TX 2-9: Batches (8 batches of 64 leaves each)
     FAILED=()
-    for i in {0..15}; do
+    for i in {0..7}; do
         step=$((i+2))
         if [ $LAST -lt $step ]; then
             if invoke "verify_leaves_batch" "$VID $i $HEADER" "$step" "batch[$i]" $BLOCK; then
@@ -228,17 +228,17 @@ relay_single_block() {
         sleep $BATCH_DELAY
     done
     
-    # TX 18: Tree
-    if [ $LAST -lt 18 ]; then
-        invoke "verify_tree_all_levels" "$VID $HEADER" "18" "tree" $BLOCK || return 1
-        save_state 18
+    # TX 10: Tree
+    if [ $LAST -lt 10 ]; then
+        invoke "verify_tree_all_levels" "$VID $HEADER" "10" "tree" $BLOCK || return 1
+        save_state 10
         sleep 12
     fi
     
-    # TX 19: Finalize
-    if [ $LAST -lt 19 ]; then
-        invoke "finalize_block_verification" "$VID $HEADER" "19" "finalize" $BLOCK || return 1
-        save_state 19
+    # TX 11: Finalize
+    if [ $LAST -lt 11 ]; then
+        invoke "finalize_block_verification" "$VID $HEADER" "11" "finalize" $BLOCK || return 1
+        save_state 11
     fi
     
     rm -f "$STATE_FILE"

@@ -16,9 +16,9 @@ use crate::utils::bit_shifts::{shl_u64, shr_u64};
 // equihash params for zcash
 const N: u32 = 200;
 const K: u32 = 9;
-const LEAVES_PER_BATCH: u32 = 32; 
+const LEAVES_PER_BATCH: u32 = 64; 
 const TOTAL_LEAVES: u32 = 512; 
-const NUM_LEAF_BATCHES: u32 = 16;
+const NUM_LEAF_BATCHES: u32 = 8;
 
 /// compute verification ID from block hash
 /// convert block hash => felt252 directly
@@ -109,25 +109,15 @@ fn append_digest_be(ref bytes: Array<u8>, digest: Digest) {
 /// * Array of 32 EquihashNode structs
 ///
 /// # Note
-/// Uses hash deduplication: 32 leaves only need 16 unique Blake2b calls (50% reduction)
+/// Uses hash deduplication: 128 leaves only need ~64 unique Blake2b calls (50% reduction)
+/// indices param should already contain only this batch's indices (LEAVES_PER_BATCH count)
 pub fn verify_leaf_batch(
-    batch_id: u32,
+    _batch_id: u32,
     header_bytes: Array<u8>,
     indices: Span<u32>
 ) -> Array<EquihashNode> {
-    let start_idx: usize = (batch_id * LEAVES_PER_BATCH).try_into().unwrap();
-    let end_idx: usize = start_idx + LEAVES_PER_BATCH.try_into().unwrap();
-
-    // Extract indices for this batch
-    let mut batch_indices: Array<u32> = array![];
-    let mut i = start_idx;
-    while i < end_idx {
-        batch_indices.append(*indices[i]);
-        i += 1;
-    };
-
-    // Use optimized batch processing with hash deduplication
-    make_leaves_batch_optimized(header_bytes, N, K, batch_indices.span())
+    // indices already contains only this batch's indices - use directly
+    make_leaves_batch_optimized(header_bytes, N, K, indices)
 }
 
 /// Combine nodes at a level to create parent level

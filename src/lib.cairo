@@ -17,7 +17,7 @@ pub mod zcash {
 pub mod utils {
     pub mod bit_shifts;
     pub mod bit_utils;
-    pub mod blake2b;
+    pub mod blake2b_ultra;    
     pub mod digest_store;  // Store trait implementation for Digest
     pub mod double_sha256;
     pub mod hash;
