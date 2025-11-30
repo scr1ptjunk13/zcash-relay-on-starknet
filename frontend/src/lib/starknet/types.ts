@@ -55,6 +55,25 @@ export function hexToDigest(hex: string): Digest {
   return values;
 }
 
+// Helper: Convert Zcash display format hash to internal format Digest
+// Zcash displays hashes byte-reversed (big-endian display), but stores little-endian
+// This reverses the bytes then reads as big-endian u32s
+export function zcashHashToDigest(displayHex: string): Digest {
+  const cleanHex = displayHex.startsWith("0x") ? displayHex.slice(2) : displayHex;
+  const padded = cleanHex.padStart(64, "0");
+  
+  // Reverse byte order (each 2 hex chars = 1 byte)
+  const bytes = padded.match(/.{2}/g) || [];
+  const reversed = bytes.reverse().join("");
+  
+  // Now read as big-endian u32s
+  const values: bigint[] = [];
+  for (let i = 0; i < 64; i += 8) {
+    values.push(BigInt("0x" + reversed.slice(i, i + 8)));
+  }
+  return values;
+}
+
 // Helper: Parse contract response to Digest (8 u32 values)
 // Handles both { value: [...] } struct format and direct array format
 export function parseDigest(response: unknown): Digest {

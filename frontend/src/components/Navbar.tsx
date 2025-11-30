@@ -10,12 +10,15 @@ export const Navbar = () => {
           <span className="font-mono font-normal text-base">Zcash Relay</span>
         </Link>
 
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-6">
           <Link to="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             Home
           </Link>
           <Link to="/blocks" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             Blocks
+          </Link>
+          <Link to="/bridge" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            Bridge
           </Link>
           <Link to="/verify" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             Verify

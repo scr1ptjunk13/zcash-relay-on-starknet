@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import Blocks from "./pages/Blocks";
 import BlockDetail from "./pages/BlockDetail";
 import Verify from "./pages/Verify";
+import Bridge from "./pages/Bridge";
 import Docs from "./pages/Docs";
 import NotFound from "./pages/NotFound";
 
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/blocks" element={<Blocks />} />
             <Route path="/block/:hashOrHeight" element={<BlockDetail />} />
             <Route path="/verify" element={<Verify />} />
+            <Route path="/bridge" element={<Bridge />} />
             <Route path="/docs" element={<Docs />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

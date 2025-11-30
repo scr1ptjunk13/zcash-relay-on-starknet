@@ -319,6 +319,56 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', isProcessing, currentHeight, queueLength: verificationQueue.length });
 });
 
+// merkle proof generation endpoint
+// calls the python script to generate merkle proofs for tx verification
+app.get('/api/merkle-proof', async (req, res) => {
+  const { block, txid } = req.query;
+  
+  if (!block || !txid) {
+    return res.status(400).json({ error: 'missing block or txid parameter' });
+  }
+  
+  const scriptPath = path.join(__dirname, '../scripts/merkle-proof.py');
+  const pythonPath = path.join(__dirname, '../venv/bin/python3');
+  
+  try {
+    const result = await new Promise((resolve, reject) => {
+      // use venv python if available, fallback to system python
+      const python = fs.existsSync(pythonPath) ? pythonPath : 'python3';
+      const proc = spawn(python, [scriptPath, block, txid], {
+        cwd: path.join(__dirname, '..'),
+        env: { ...process.env }
+      });
+      
+      let stdout = '';
+      let stderr = '';
+      
+      proc.stdout.on('data', (data) => { stdout += data.toString(); });
+      proc.stderr.on('data', (data) => { stderr += data.toString(); });
+      
+      proc.on('close', (code) => {
+        if (code === 0) {
+          try {
+            const proof = JSON.parse(stdout);
+            resolve(proof);
+          } catch (e) {
+            reject(new Error('failed to parse proof: ' + e.message));
+          }
+        } else {
+          reject(new Error(stderr || 'script failed with code ' + code));
+        }
+      });
+      
+      proc.on('error', reject);
+    });
+    
+    res.json(result);
+  } catch (err) {
+    console.error('[MERKLE-PROOF] Error:', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.listen(PORT, () => {
   console.log('Backend on http://localhost:' + PORT);
   console.log('Queue system active - handles concurrent requests');
