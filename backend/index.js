@@ -164,23 +164,37 @@ function runVerification(targetHeight) {
     
     activeProcess = childProcess;
     
+    let currentStep = 0;
+    
     childProcess.stdout.on('data', async (data) => {
       const output = data.toString();
       console.log('[RELAY]', output.trim());
       
-      const txMatch = output.match(/\[TX (\d+)\/11\]/);
-      const hashMatch = output.match(/(0x[a-f0-9]{64})/i);
+      const cleanOutput = output.replace(/\x1b\[[0-9;]*m/g, '').trim();
       
-      if (txMatch) {
-        const step = parseInt(txMatch[1]);
-        const cleanOutput = output.replace(/\x1b\[[0-9;]*m/g, '').trim();
-        broadcast({ type: 'progress', height: targetHeight, step: step, output: cleanOutput });
+      // Skip empty lines
+      if (!cleanOutput) return;
+      
+      // Split by newlines and process each line
+      const lines = cleanOutput.split('\n').filter(line => line.trim());
+      
+      for (const line of lines) {
+        const txMatch = line.match(/\[TX (\d+)\/11\]/);
+        const hashMatch = line.match(/(0x[a-f0-9]{64})/i);
         
-        if (hashMatch) {
+        if (txMatch) {
+          currentStep = parseInt(txMatch[1]);
+        }
+        
+        // Broadcast ALL output lines, not just TX lines
+        broadcast({ type: 'progress', height: targetHeight, step: currentStep, output: line });
+        
+        // Handle fee updates for TX lines
+        if (txMatch && hashMatch) {
           const txHash = hashMatch[1];
-          updateTxWithRealFee(targetHeight, txHash, step).then(feeData => {
+          updateTxWithRealFee(targetHeight, txHash, currentStep).then(feeData => {
             if (feeData) {
-              broadcast({ type: 'fee_update', height: targetHeight, step: step, fee: feeData });
+              broadcast({ type: 'fee_update', height: targetHeight, step: currentStep, fee: feeData });
             }
           });
         }

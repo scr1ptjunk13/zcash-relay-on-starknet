@@ -14,14 +14,14 @@ export const Navbar = () => {
           <Link to="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             Home
           </Link>
-          <Link to="/blocks" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-            Blocks
+          <Link to="/verify" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            Verify
           </Link>
           <Link to="/bridge" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             Bridge
           </Link>
-          <Link to="/verify" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-            Verify
+          <Link to="/blocks" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            Blocks
           </Link>
           <Link to="/docs" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             Docs

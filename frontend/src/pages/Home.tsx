@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/StatCard";
 import { BlockRow } from "@/components/BlockRow";
-import { ArrowRight, Activity, Database, Zap, DollarSign, AlertCircle } from "lucide-react";
+import { ArrowRight, Activity, Database, Zap, DollarSign, AlertCircle, Shield, ArrowLeftRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useFormattedStats } from "@/hooks/useRelayStats";
 import { useRecentBlocks } from "@/hooks/useRelayContract";
@@ -31,11 +31,20 @@ const Home = () => {
           <p className="text-sm text-muted-foreground mb-6 max-w-2xl mx-auto">
             The first on-chain Equihash PoW verification. No trusted relayers. Pure cryptography.
           </p>
-          <Link to="/blocks">
-            <Button variant="outline" size="sm" className="gap-2">
-              Explore Blocks <ArrowRight className="w-3 h-3" />
-            </Button>
-          </Link>
+          <div className="flex items-center justify-center gap-3">
+            <Link to="/verify">
+              <Button variant="default" size="sm" className="gap-2">
+                <Shield className="w-3 h-3" />
+                Verify Block
+              </Button>
+            </Link>
+            <Link to="/bridge">
+              <Button variant="outline" size="sm" className="gap-2">
+                <ArrowLeftRight className="w-3 h-3" />
+                Bridge Assets
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
