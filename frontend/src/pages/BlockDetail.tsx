@@ -215,7 +215,7 @@ function VerificationTimeline({ height, explorerUrl }: { height: number; explore
         {verification.transactions.map((tx, idx) => (
           <div
             key={tx.step}
-            className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:border-border transition-colors"
+            className="flex items-center justify-between p-3 border border-border/50  hover:border-border transition-colors"
           >
             <div className="flex items-center gap-3">
               <CheckCircle2 className="w-5 h-5 text-success" />

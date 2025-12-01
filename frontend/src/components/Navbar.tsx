@@ -1,13 +1,14 @@
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
 
 export const Navbar = () => {
   return (
     <nav className="border-b border-border/30 bg-background sticky top-0 z-50">
       <div className="container mx-auto px-4 h-14 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
-          <span className="font-mono font-normal text-base">Zcash Relay</span>
+          <img src="/logo.png" alt="ZULU" className="w-8 h-8" />
+          <div className="flex flex-col">
+            <span className="font-bold text-base tracking-wide">Z.U.L.U.</span>
+          </div>
         </Link>
 
         <div className="hidden md:flex items-center gap-6">

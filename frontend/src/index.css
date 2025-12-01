@@ -17,8 +17,8 @@ All colors MUST be HSL.
     --popover: 0 0% 6%;
     --popover-foreground: 0 0% 95%;
 
-    --primary: 187 85% 50%;
-    --primary-foreground: 0 0% 4%;
+    --primary: 15 90% 55%;
+    --primary-foreground: 0 0% 100%;
 
     --secondary: 0 0% 10%;
     --secondary-foreground: 0 0% 95%;
@@ -26,8 +26,8 @@ All colors MUST be HSL.
     --muted: 0 0% 12%;
     --muted-foreground: 0 0% 50%;
 
-    --accent: 187 85% 50%;
-    --accent-foreground: 0 0% 4%;
+    --accent: 15 90% 55%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 95%;
@@ -40,15 +40,15 @@ All colors MUST be HSL.
 
     --border: 0 0% 15%;
     --input: 0 0% 12%;
-    --ring: 187 85% 50%;
+    --ring: 15 90% 55%;
 
-    --radius: 0.5rem;
+    --radius: 0rem;
 
-    --chart-1: 187 100% 42%;
-    --chart-2: 187 85% 55%;
-    --chart-3: 187 70% 65%;
-    --chart-4: 187 55% 75%;
-    --chart-5: 187 40% 85%;
+    --chart-1: 15 100% 50%;
+    --chart-2: 20 90% 55%;
+    --chart-3: 25 80% 60%;
+    --chart-4: 30 70% 65%;
+    --chart-5: 35 60% 70%;
   }
 }
 

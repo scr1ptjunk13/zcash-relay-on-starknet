@@ -182,7 +182,7 @@ const Bridge = () => {
           <Card>
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
-                <span className="w-6 h-6 rounded-full bg-primary/10 text-primary text-sm flex items-center justify-center">1</span>
+                <span className="w-6 h-6  bg-primary/10 text-primary text-sm flex items-center justify-center">1</span>
                 Enter Transaction Details
               </CardTitle>
               <CardDescription>
@@ -231,7 +231,7 @@ const Bridge = () => {
                   Or paste proof JSON (from merkle-proof.py):
                 </label>
                 <textarea
-                  className="w-full h-24 p-2 text-xs font-mono bg-muted rounded border resize-none"
+                  className="w-full h-24 p-2 text-xs font-mono bg-muted border resize-none"
                   placeholder='{"tx_id": "...", "block_hash": "...", "merkle_branch": [...], "merkle_index": 0}'
                   onChange={handleProofPaste}
                 />
@@ -244,7 +244,7 @@ const Bridge = () => {
             <Card className="border-primary/50">
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-full bg-primary/10 text-primary text-sm flex items-center justify-center">2</span>
+                  <span className="w-6 h-6  bg-primary/10 text-primary text-sm flex items-center justify-center">2</span>
                   Merkle Proof Ready
                   <Badge variant="secondary" className="ml-auto">
                     {merkleProof.merkle_branch.length} levels
@@ -262,7 +262,7 @@ const Bridge = () => {
                     <span className="ml-2 font-mono">{merkleProof.tx_count}</span>
                   </div>
                 </div>
-                <div className="text-xs font-mono bg-muted p-2 rounded break-all">
+                <div className="text-xs font-mono bg-muted p-2 break-all">
                   <span className="text-muted-foreground">tx: </span>
                   {merkleProof.tx_id.slice(0, 32)}...
                 </div>

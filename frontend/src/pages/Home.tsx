@@ -23,25 +23,32 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="py-12 px-4">
+      <section className="pt-8 pb-4 px-4">
         <div className="container mx-auto max-w-5xl text-center">
-          <h1 className="text-3xl md:text-4xl font-normal mb-3 text-foreground">
-            Trustless Zcash Verification on Starknet
+          <div className="flex justify-center mb-3">
+            <img src="/logo.png" alt="ZULU" className="w-20 h-20" />
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold mb-1 text-foreground tracking-wide">
+            Z.U.L.U.
           </h1>
-          <p className="text-sm text-muted-foreground mb-6 max-w-2xl mx-auto">
-            The first on-chain Equihash PoW verification. No trusted relayers. Pure cryptography.
+          <p className="text-base text-primary mb-2 font-medium">
+            Zcash Universal Linking Utility
+          </p>
+          <p className="text-sm text-muted-foreground mb-4 max-w-2xl mx-auto">
+            The first trustless Zcash relay on Starknet. Full on-chain Equihash PoW verification. 
+            No oracles. No multisigs. Pure cryptography.
           </p>
           <div className="flex items-center justify-center gap-3">
             <Link to="/verify">
               <Button variant="default" size="sm" className="gap-2">
-                <Shield className="w-3 h-3" />
+                <Shield className="w-4 h-4" />
                 Verify Block
               </Button>
             </Link>
             <Link to="/bridge">
               <Button variant="outline" size="sm" className="gap-2">
-                <ArrowLeftRight className="w-3 h-3" />
-                Bridge Assets
+                <ArrowLeftRight className="w-4 h-4" />
+                Verify Transaction
               </Button>
             </Link>
           </div>
@@ -63,9 +70,9 @@ const Home = () => {
       )}
 
       {/* Stats Section */}
-      <section className="py-12 px-4">
+      <section className="py-6 px-4">
         <div className="container mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {statCards.map((stat) => (
               <StatCard
                 key={stat.label}
@@ -79,7 +86,7 @@ const Home = () => {
       </section>
 
       {/* Recent Activity */}
-      <section className="py-8 px-4">
+      <section className="py-4 px-4">
         <div className="container mx-auto">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-normal">Recent Activity</h2>
