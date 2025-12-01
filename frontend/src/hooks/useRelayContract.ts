@@ -102,7 +102,7 @@ export function useCumulativePow(height: number | undefined, maxDepth: number = 
   });
 }
 
-// Fetch multiple recent blocks
+// Fetch multiple recent blocks - PARALLEL version for speed
 export function useRecentBlocks(count: number = 5) {
   const { contract, isConfigured } = useStarknet();
   const { data: currentHeight } = useChainHeight();
@@ -114,54 +114,69 @@ export function useRecentBlocks(count: number = 5) {
         throw new Error("Contract not ready");
       }
 
-      const blocks: BlockInfo[] = [];
       const startHeight = currentHeight;
       const endHeight = Math.max(0, currentHeight - count + 1);
+      const heights = [];
+      for (let h = startHeight; h >= endHeight; h--) heights.push(h);
 
-      for (let height = startHeight; height >= endHeight; height--) {
-        try {
-          // Get block hash at this height
-          const hashResult = await contract.get_block(height);
-          const digest = parseDigest(hashResult);
+      // Step 1: Fetch all block hashes in parallel
+      const hashResults = await Promise.all(
+        heights.map(h => contract.get_block(h).catch(() => null))
+      );
 
-          if (isZeroDigest(digest)) continue;
+      // Filter valid blocks and prepare for status fetch
+      const validBlocks: { height: number; digest: Digest; hash: string }[] = [];
+      for (let i = 0; i < heights.length; i++) {
+        if (!hashResults[i]) continue;
+        const digest = parseDigest(hashResults[i]);
+        if (isZeroDigest(digest)) continue;
+        validBlocks.push({
+          height: heights[i],
+          digest,
+          hash: digestToHex(digest),
+        });
+      }
 
-          const hash = digestToHex(digest);
-          
-          // Format digest as struct for contract calls: { value: [...] }
-          const digestStruct = { value: digest.map(v => v.toString()) };
+      // Step 2: Fetch all statuses AND finalization states in parallel (single batch)
+      const detailPromises = validBlocks.map(async (b) => {
+        const digestStruct = { value: b.digest.map(v => v.toString()) };
+        const [status, isFinalized] = await Promise.all([
+          contract.get_status(digestStruct).catch(() => null),
+          contract.is_block_finalized(digestStruct).catch(() => false),
+        ]);
+        return { status, isFinalized };
+      });
+      const detailResults = await Promise.all(detailPromises);
 
-          // Get block status
-          const statusResult = await contract.get_status(digestStruct);
-          const registrationTime = Number(statusResult.registration_timestamp || 0);
-          const nTime = Number(statusResult.n_time || 0);
-          const pow = BigInt(statusResult.pow?.toString() || "0");
+      // Combine results
+      const blocks: BlockInfo[] = [];
+      for (let i = 0; i < validBlocks.length; i++) {
+        const { status, isFinalized } = detailResults[i];
+        if (!status) continue;
 
-          // Check if finalized
-          const isFinalized = await contract.is_block_finalized(digestStruct);
+        const { height, hash } = validBlocks[i];
+        const registrationTime = Number(status.registration_timestamp || 0);
+        const nTime = Number(status.n_time || 0);
+        const pow = BigInt(status.pow?.toString() || "0");
+        const prevDigest = parseDigest(status.prev_block_digest);
 
-          // Get prev hash
-          const prevDigest = parseDigest(statusResult.prev_block_digest);
-
-          blocks.push({
-            height,
-            hash,
-            prevHash: digestToHex(prevDigest),
-            timestamp: nTime,
-            registrationTimestamp: registrationTime,
-            pow,
-            status: isFinalized ? "finalized" : "verified",
-            confirmations: currentHeight - height,
-            isCanonical: true,
-          });
-        } catch (err) {
-          console.warn(`Failed to fetch block at height ${height}:`, err);
-        }
+        blocks.push({
+          height,
+          hash,
+          prevHash: digestToHex(prevDigest),
+          timestamp: nTime,
+          registrationTimestamp: registrationTime,
+          pow,
+          status: Boolean(isFinalized) ? "finalized" : "verified",
+          confirmations: currentHeight - height,
+          isCanonical: true,
+        });
       }
 
       return blocks;
     },
     enabled: isConfigured && currentHeight !== undefined,
+    staleTime: 30000, // Consider data fresh for 30s
     refetchInterval: 60000, // Refetch every minute
   });
 }
