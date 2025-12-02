@@ -416,6 +416,33 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', isProcessing, currentHeight, queueLength: verificationQueue.length });
 });
 
+// Mark a block as verified (for blocks verified before logging was fixed)
+app.post('/api/mark-verified/:height', (req, res) => {
+  const height = parseInt(req.params.height);
+  if (isNaN(height) || height < 0) return res.status(400).json({ error: 'Invalid height' });
+  
+  try {
+    const data = JSON.parse(fs.readFileSync(VERIFICATIONS_FILE, 'utf8'));
+    const blockKey = 'block_' + height;
+    
+    if (!data[blockKey]) {
+      // Create minimal entry for verified block
+      data[blockKey] = {
+        transactions: [],
+        verification_id: 'verified',
+        verified: true,
+        note: 'Verified on-chain (detailed timeline not recorded)'
+      };
+      fs.writeFileSync(VERIFICATIONS_FILE, JSON.stringify(data, null, 2));
+      console.log('[DATA] Marked block ' + height + ' as verified');
+    }
+    
+    res.json({ status: 'ok', blockKey });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // merkle proof generation endpoint
 // calls the python script to generate merkle proofs for tx verification
 app.get('/api/merkle-proof', async (req, res) => {
