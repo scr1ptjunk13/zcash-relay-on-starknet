@@ -15,17 +15,16 @@ EOF
 mkdir -p /root/.starknet_accounts
 cat > /root/.starknet_accounts/starknet_open_zeppelin_accounts.json << EOF
 {
-  "alpha-sepolia": {
-    "testnet_account": {
-      "address": "${STARKNET_ACCOUNT_ADDRESS}",
-      "class_hash": "0x5b4b537eaa2399e3aa99c4e2e0208ebd6c71bc1467938cd52c798c601e43564",
-      "deployed": true,
-      "legacy": false,
-      "private_key": "${STARKNET_PRIVATE_KEY}",
-      "public_key": "${STARKNET_PUBLIC_KEY}",
-      "salt": "0x5d35a7a6d49b7aff",
-      "type": "OpenZeppelin"
-    }
+  "testnet_account": {
+    "network": "alpha-sepolia",
+    "address": "${STARKNET_ACCOUNT_ADDRESS}",
+    "class_hash": "0x5b4b537eaa2399e3aa99c4e2e0208ebd6c71bc1467938cd52c798c601e43564",
+    "deployed": true,
+    "legacy": false,
+    "private_key": "${STARKNET_PRIVATE_KEY}",
+    "public_key": "${STARKNET_PUBLIC_KEY}",
+    "salt": "0x5d35a7a6d49b7aff",
+    "type": "OpenZeppelin"
   }
 }
 EOF
