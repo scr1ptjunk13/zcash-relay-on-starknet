@@ -168,12 +168,12 @@ relay_single_block() {
         return 0
     fi
     
-    # Fetch block data
+    # Fetch block data AND verification ID in ONE RPC call
     echo -e "${BLUE}[FETCH]${NC} Fetching from Zcash..."
     FETCH_ERR=$(mktemp)
-    HEADER=$(python3 scripts/format-block-calldata.py $BLOCK -v 2>"$FETCH_ERR")
+    FETCH_OUTPUT=$(python3 scripts/format-block-calldata.py $BLOCK -v --vid 2>"$FETCH_ERR")
     FETCH_EXIT=$?
-    if [ $FETCH_EXIT -ne 0 ] || [ -z "$HEADER" ]; then
+    if [ $FETCH_EXIT -ne 0 ] || [ -z "$FETCH_OUTPUT" ]; then
         echo -e "${RED}[ERROR]${NC} Failed to fetch block data"
         echo -e "${RED}[ERROR]${NC} $(cat $FETCH_ERR)"
         rm -f "$FETCH_ERR"
@@ -181,17 +181,14 @@ relay_single_block() {
     fi
     rm -f "$FETCH_ERR"
     
-    # Compute verification ID
-    VID_ERR=$(mktemp)
-    VID=$(python3 scripts/compute-verification-id.py $BLOCK 2>"$VID_ERR")
-    VID_EXIT=$?
-    if [ $VID_EXIT -ne 0 ] || [ -z "$VID" ]; then
-        echo -e "${RED}[ERROR]${NC} Failed to compute verification ID"
-        echo -e "${RED}[ERROR]${NC} $(cat $VID_ERR)"
-        rm -f "$VID_ERR"
+    # Parse output: first line is calldata, second line is VID
+    HEADER=$(echo "$FETCH_OUTPUT" | head -1)
+    VID=$(echo "$FETCH_OUTPUT" | tail -1)
+    
+    if [ -z "$HEADER" ] || [ -z "$VID" ]; then
+        echo -e "${RED}[ERROR]${NC} Failed to parse block data"
         return 1
     fi
-    rm -f "$VID_ERR"
     echo -e "${BLUE}[FETCH]${NC} VID: ${VID:0:18}..."
     # Save VID to JSON log
     save_vid_to_log "$BLOCK" "$VID"

@@ -69,13 +69,33 @@ def header_to_calldata(header_data):
     
     return calldata
 
+def compute_verification_id(block_hash_hex: str) -> str:
+    """Compute verification_id from block hash (same logic as compute-verification-id.py)"""
+    block_hash_hex = block_hash_hex.replace("0x", "")
+    hash_bytes = bytes.fromhex(block_hash_hex)
+    internal_bytes = hash_bytes[::-1]
+    internal_hex = internal_bytes.hex()
+    
+    u32_array = []
+    for i in range(0, 64, 8):
+        chunk_hex = internal_hex[i:i+8]
+        u32_array.append(int(chunk_hex, 16))
+    
+    result = 0
+    for i in range(7):
+        result = result * 0x100000000 + u32_array[i]
+    
+    return f"0x{result:056x}"
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Format Zcash block as raw calldata')
     parser.add_argument('block', type=int, help='Block number to format')
     parser.add_argument('-v', '--verbose', action='store_true', help='Print block info to stderr')
+    parser.add_argument('--vid', action='store_true', help='Also output verification ID on second line')
     args = parser.parse_args()
     
-    # Fetch block
+    # Fetch block (ONCE - this is the only RPC call needed)
     header = fetch_block_header(args.block, verify=True)
     
     # Convert to calldata
@@ -86,3 +106,8 @@ if __name__ == "__main__":
     
     # Output space-separated calldata
     print(' '.join(calldata))
+    
+    # Output VID on second line if requested
+    if args.vid:
+        vid = compute_verification_id(header['block_hash'])
+        print(vid)
