@@ -222,11 +222,14 @@ function runVerification(targetHeight) {
       
       for (const line of lines) {
         const txMatch = line.match(/\[TX (\d+)\/11\]/);
-        const hashMatch = line.match(/(0x[a-f0-9]{64})/i);
+        const hashMatch = line.match(/^\s*(0x[a-f0-9]{64})\s*$/i) || line.match(/\s+(0x[a-f0-9]{64})\s*$/i);
         const vidMatch = line.match(/\[FETCH\] VID: (0x[a-f0-9]+)/i);
+        const timeMatch = line.match(/\((\d+)s\)/);
         
         if (txMatch) {
           currentStep = parseInt(txMatch[1]);
+          // Reset time tracking for this step
+          lastTxTime = Date.now();
         }
         
         // Broadcast ALL output lines, not just TX lines
@@ -244,12 +247,11 @@ function runVerification(targetHeight) {
           } catch (e) {}
         }
         
-        // Save TX to file and handle fee updates
-        if (txMatch && hashMatch) {
+        // Save TX to file - hash comes on separate line after [TX X/11]
+        if (hashMatch && currentStep > 0) {
           const txHash = hashMatch[1];
-          const now = Date.now();
-          const timeTaken = Math.round((now - lastTxTime) / 1000);
-          lastTxTime = now;
+          // Get time from the previous TX line if available
+          const timeTaken = timeMatch ? parseInt(timeMatch[1]) : Math.round((Date.now() - lastTxTime) / 1000);
           
           // Save transaction to file
           try {
