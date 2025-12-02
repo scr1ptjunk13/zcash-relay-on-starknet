@@ -170,20 +170,28 @@ relay_single_block() {
     
     # Fetch block data
     echo -e "${BLUE}[FETCH]${NC} Fetching from Zcash..."
-    HEADER=$(python3 scripts/format-block-calldata.py $BLOCK -v 2>&1)
+    FETCH_ERR=$(mktemp)
+    HEADER=$(python3 scripts/format-block-calldata.py $BLOCK -v 2>"$FETCH_ERR")
     FETCH_EXIT=$?
     if [ $FETCH_EXIT -ne 0 ] || [ -z "$HEADER" ]; then
         echo -e "${RED}[ERROR]${NC} Failed to fetch block data"
-        echo -e "${RED}[ERROR]${NC} Python output: $HEADER"
+        echo -e "${RED}[ERROR]${NC} $(cat $FETCH_ERR)"
+        rm -f "$FETCH_ERR"
         return 1
     fi
+    rm -f "$FETCH_ERR"
     
     # Compute verification ID
-    VID=$(python scripts/compute-verification-id.py $BLOCK 2>/dev/null)
-    if [ -z "$VID" ]; then
+    VID_ERR=$(mktemp)
+    VID=$(python3 scripts/compute-verification-id.py $BLOCK 2>"$VID_ERR")
+    VID_EXIT=$?
+    if [ $VID_EXIT -ne 0 ] || [ -z "$VID" ]; then
         echo -e "${RED}[ERROR]${NC} Failed to compute verification ID"
+        echo -e "${RED}[ERROR]${NC} $(cat $VID_ERR)"
+        rm -f "$VID_ERR"
         return 1
     fi
+    rm -f "$VID_ERR"
     echo -e "${BLUE}[FETCH]${NC} VID: ${VID:0:18}..."
     # Save VID to JSON log
     save_vid_to_log "$BLOCK" "$VID"

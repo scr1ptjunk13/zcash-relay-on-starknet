@@ -18,11 +18,6 @@ load_dotenv()
 RPC_URL = os.getenv("ZCASH_RPC_URL", "https://zcash-mainnet.gateway.tatum.io/")
 RPC_KEY = os.getenv("ZCASH_RPC_API_KEY", "")
 
-# Debug: print to stderr so we can see in logs
-import sys
-print(f"[DEBUG] RPC_URL: {RPC_URL[:50]}...", file=sys.stderr)
-print(f"[DEBUG] RPC_KEY set: {bool(RPC_KEY)}", file=sys.stderr)
-
 
 def rpc_call(method: str, params: list) -> dict:
     """Make RPC call to Zcash node"""
