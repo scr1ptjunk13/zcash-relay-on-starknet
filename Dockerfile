@@ -36,6 +36,9 @@ COPY frontend/src/data/ ./frontend/src/data/
 # Create the starknet accounts directory and file
 RUN mkdir -p /root/.starknet_accounts
 
+# Create persistent data directory (will be mounted as Railway volume)
+RUN mkdir -p /app/data
+
 # The accounts file will be created from env var at runtime
 # Copy a template that will be populated by entrypoint
 COPY docker-entrypoint.sh /docker-entrypoint.sh

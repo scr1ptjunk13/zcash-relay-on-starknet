@@ -22,8 +22,27 @@ const provider = new RpcProvider({
   nodeUrl: process.env.STARKNET_RPC_URL || 'https://starknet-sepolia.g.alchemy.com/starknet/version/rpc/v0_7'
 });
 
-const VERIFICATIONS_FILE = path.join(__dirname, '../frontend/src/data/verifications.json');
+// Use persistent storage path in production (Railway volume), fallback to local for dev
+const DATA_DIR = process.env.NODE_ENV === 'production' ? '/app/data' : path.join(__dirname, '../frontend/src/data');
+const VERIFICATIONS_FILE = path.join(DATA_DIR, 'verifications.json');
 const RELAY_SCRIPT = path.join(__dirname, '../scripts/relay-block.sh');
+
+// Ensure data directory exists and has initial data
+if (!fs.existsSync(DATA_DIR)) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+if (!fs.existsSync(VERIFICATIONS_FILE)) {
+  // Copy initial data from static file if it exists
+  const staticFile = path.join(__dirname, '../frontend/src/data/verifications.json');
+  if (fs.existsSync(staticFile)) {
+    fs.copyFileSync(staticFile, VERIFICATIONS_FILE);
+    console.log('[DATA] Initialized from static verifications.json');
+  } else {
+    fs.writeFileSync(VERIFICATIONS_FILE, '{}');
+    console.log('[DATA] Created empty verifications.json');
+  }
+}
+console.log('[DATA] Using:', VERIFICATIONS_FILE);
 
 // WebSocket server will be attached to HTTP server after app.listen()
 
