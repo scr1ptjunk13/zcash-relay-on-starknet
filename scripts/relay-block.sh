@@ -23,9 +23,15 @@ DIM='\033[2m'
 NC='\033[0m'
 
 # Contract config
-CONTRACT="0x0546f738f87885a936cb8df8085b4b3fdc9bf1be6449cf5f9967c4a5892a12dc"
+CONTRACT="${CONTRACT_ADDRESS:-0x0546f738f87885a936cb8df8085b4b3fdc9bf1be6449cf5f9967c4a5892a12dc}"
 ACCOUNT="testnet_account"
-NETWORK="sepolia"
+
+# Use custom RPC URL if provided, otherwise use network name
+if [ -n "$STARKNET_RPC_URL" ]; then
+    NETWORK_ARG="--url $STARKNET_RPC_URL"
+else
+    NETWORK_ARG="--network sepolia"
+fi
 
 [ -z "$1" ] && { echo -e "${RED}Usage:${NC} $0 <target_height> [--resume]"; exit 1; }
 
@@ -124,7 +130,7 @@ invoke() {
     local step_start=$(date +%s)
     
     while [ $attempt -le $MAX_RETRIES ]; do
-        output=$(sncast --account $ACCOUNT invoke --contract-address $CONTRACT --function $func --calldata $calldata --network $NETWORK 2>&1)
+        output=$(sncast --account $ACCOUNT invoke --contract-address $CONTRACT --function $func --calldata $calldata $NETWORK_ARG 2>&1)
         
         if echo "$output" | grep -q "Transaction Hash:"; then
             tx=$(echo "$output" | grep -oP 'Transaction Hash: \K0x[a-f0-9]+' | head -1)
@@ -162,7 +168,7 @@ relay_single_block() {
     echo -e "${DIM}─────────────────────────────────────${NC}"
     
     # Check if already verified
-    BLOCK_HASH=$(sncast --account $ACCOUNT call --contract-address $CONTRACT --function get_block --calldata $BLOCK --network $NETWORK 2>&1)
+    BLOCK_HASH=$(sncast --account $ACCOUNT call --contract-address $CONTRACT --function get_block --calldata $BLOCK $NETWORK_ARG 2>&1)
     if echo "$BLOCK_HASH" | grep -qE '0x[1-9a-f]'; then
         echo -e "${GREEN}[SKIP]${NC} Already verified"
         return 0
@@ -262,17 +268,17 @@ relay_single_block() {
 # Main
 echo ""
 echo -e "${BOLD}${CYAN}ZCASH RELAY${NC}"
-echo -e "${DIM}Target: Block $TARGET | Network: $NETWORK${NC}"
+echo -e "${DIM}Target: Block $TARGET | Network: sepolia${NC}"
 echo -e "${DIM}Contract: ${CONTRACT:0:10}...${CONTRACT: -8}${NC}"
 
 # Get current chain height
 echo -e "${BLUE}[CHECK]${NC} Getting current chain height..."
-CHAIN_HEIGHT_HEX=$(sncast --account $ACCOUNT call --contract-address $CONTRACT --function get_chain_height --network $NETWORK 2>&1 | grep -oP '0x[a-f0-9]+' | head -1)
+CHAIN_HEIGHT_HEX=$(sncast --account $ACCOUNT call --contract-address $CONTRACT --function get_chain_height $NETWORK_ARG 2>&1 | grep -oP '0x[a-f0-9]+' | head -1)
 
 # Determine starting block
 if [ -z "$CHAIN_HEIGHT_HEX" ] || [ "$CHAIN_HEIGHT_HEX" = "0x0" ]; then
     # Check if genesis exists
-    GENESIS_HASH=$(sncast --account $ACCOUNT call --contract-address $CONTRACT --function get_block --calldata 0 --network $NETWORK 2>&1)
+    GENESIS_HASH=$(sncast --account $ACCOUNT call --contract-address $CONTRACT --function get_block --calldata 0 $NETWORK_ARG 2>&1)
     if echo "$GENESIS_HASH" | grep -qE '0x[1-9a-f]'; then
         START_BLOCK=1
         echo -e "${BLUE}[CHECK]${NC} Genesis verified, chain height: 0"
