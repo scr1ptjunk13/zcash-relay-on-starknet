@@ -13,8 +13,10 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3001;
 
-// Load env vars
+// Load env vars (try multiple paths for local dev and Docker)
 require('dotenv').config({ path: '../.env' });
+require('dotenv').config({ path: '/app/.env' });
+require('dotenv').config();
 
 const provider = new RpcProvider({ 
   nodeUrl: process.env.STARKNET_RPC_URL || 'https://starknet-sepolia.g.alchemy.com/starknet/version/rpc/v0_7'
