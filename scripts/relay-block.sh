@@ -138,6 +138,8 @@ invoke() {
             local step_time=$((step_end - step_start))
             echo -e "${GREEN}[TX $step/$TOTAL_TXS]${NC} $desc ${DIM}(${step_time}s)${NC}"
             echo -e "         ${DIM}${tx:0:18}...${tx: -8}${NC}"
+            # Output full hash on separate line for backend parsing
+            echo "TXHASH:$tx"
             # Save full TX hash to JSON log
             save_tx_to_log "$block" "$step" "$desc" "$tx" "$step_time"
             return 0

@@ -222,7 +222,7 @@ function runVerification(targetHeight) {
       
       for (const line of lines) {
         const txMatch = line.match(/\[TX (\d+)\/11\]/);
-        const hashMatch = line.match(/^\s*(0x[a-f0-9]{64})\s*$/i) || line.match(/\s+(0x[a-f0-9]{64})\s*$/i);
+        const fullHashMatch = line.match(/^TXHASH:(0x[a-f0-9]{64})$/i);
         const vidMatch = line.match(/\[FETCH\] VID: (0x[a-f0-9]+)/i);
         const timeMatch = line.match(/\((\d+)s\)/);
         
@@ -247,9 +247,9 @@ function runVerification(targetHeight) {
           } catch (e) {}
         }
         
-        // Save TX to file - hash comes on separate line after [TX X/11]
-        if (hashMatch && currentStep > 0) {
-          const txHash = hashMatch[1];
+        // Save TX to file - full hash comes as TXHASH:0x... line
+        if (fullHashMatch && currentStep > 0) {
+          const txHash = fullHashMatch[1];
           // Get time from the previous TX line if available
           const timeTaken = timeMatch ? parseInt(timeMatch[1]) : Math.round((Date.now() - lastTxTime) / 1000);
           
