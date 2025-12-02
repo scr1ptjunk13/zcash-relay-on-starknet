@@ -28,18 +28,32 @@ const VERIFICATIONS_FILE = path.join(DATA_DIR, 'verifications.json');
 const RELAY_SCRIPT = path.join(__dirname, '../scripts/relay-block.sh');
 
 // Ensure data directory exists and has initial data
+console.log('[DATA] NODE_ENV:', process.env.NODE_ENV);
+console.log('[DATA] DATA_DIR:', DATA_DIR);
+
 if (!fs.existsSync(DATA_DIR)) {
+  console.log('[DATA] Creating data directory...');
   fs.mkdirSync(DATA_DIR, { recursive: true });
 }
+
 if (!fs.existsSync(VERIFICATIONS_FILE)) {
   // Copy initial data from static file if it exists
   const staticFile = path.join(__dirname, '../frontend/src/data/verifications.json');
+  console.log('[DATA] File not found, initializing from static...');
   if (fs.existsSync(staticFile)) {
     fs.copyFileSync(staticFile, VERIFICATIONS_FILE);
     console.log('[DATA] Initialized from static verifications.json');
   } else {
     fs.writeFileSync(VERIFICATIONS_FILE, '{}');
     console.log('[DATA] Created empty verifications.json');
+  }
+} else {
+  // File exists - check how many blocks it has
+  try {
+    const existing = JSON.parse(fs.readFileSync(VERIFICATIONS_FILE, 'utf8'));
+    console.log('[DATA] Found existing file with', Object.keys(existing).length, 'blocks');
+  } catch (e) {
+    console.log('[DATA] Error reading existing file:', e.message);
   }
 }
 console.log('[DATA] Using:', VERIFICATIONS_FILE);
