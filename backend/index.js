@@ -192,6 +192,21 @@ function runVerification(targetHeight) {
     activeProcess = childProcess;
     
     let currentStep = 0;
+    let lastTxTime = Date.now();
+    const stepNames = ['start', 'batch[0]', 'batch[1]', 'batch[2]', 'batch[3]', 'batch[4]', 'batch[5]', 'batch[6]', 'batch[7]', 'tree', 'finalize'];
+    
+    // Initialize block entry in verifications file
+    const blockKey = 'block_' + targetHeight;
+    try {
+      const data = JSON.parse(fs.readFileSync(VERIFICATIONS_FILE, 'utf8'));
+      if (!data[blockKey]) {
+        data[blockKey] = { transactions: [], verification_id: null };
+        fs.writeFileSync(VERIFICATIONS_FILE, JSON.stringify(data, null, 2));
+        console.log('[DATA] Created entry for block ' + targetHeight);
+      }
+    } catch (e) {
+      console.error('[DATA] Error initializing block:', e.message);
+    }
     
     childProcess.stdout.on('data', async (data) => {
       const output = data.toString();
@@ -208,6 +223,7 @@ function runVerification(targetHeight) {
       for (const line of lines) {
         const txMatch = line.match(/\[TX (\d+)\/11\]/);
         const hashMatch = line.match(/(0x[a-f0-9]{64})/i);
+        const vidMatch = line.match(/\[FETCH\] VID: (0x[a-f0-9]+)/i);
         
         if (txMatch) {
           currentStep = parseInt(txMatch[1]);
@@ -216,9 +232,49 @@ function runVerification(targetHeight) {
         // Broadcast ALL output lines, not just TX lines
         broadcast({ type: 'progress', height: targetHeight, step: currentStep, output: line });
         
-        // Handle fee updates for TX lines
+        // Save VID to file
+        if (vidMatch) {
+          try {
+            const data = JSON.parse(fs.readFileSync(VERIFICATIONS_FILE, 'utf8'));
+            if (data[blockKey]) {
+              data[blockKey].verification_id = vidMatch[1];
+              fs.writeFileSync(VERIFICATIONS_FILE, JSON.stringify(data, null, 2));
+              console.log('[DATA] Saved VID for block ' + targetHeight);
+            }
+          } catch (e) {}
+        }
+        
+        // Save TX to file and handle fee updates
         if (txMatch && hashMatch) {
           const txHash = hashMatch[1];
+          const now = Date.now();
+          const timeTaken = Math.round((now - lastTxTime) / 1000);
+          lastTxTime = now;
+          
+          // Save transaction to file
+          try {
+            const data = JSON.parse(fs.readFileSync(VERIFICATIONS_FILE, 'utf8'));
+            if (data[blockKey]) {
+              // Check if this step already exists
+              const existingIdx = data[blockKey].transactions.findIndex(t => t.step === currentStep);
+              const txData = {
+                step: currentStep,
+                name: stepNames[currentStep - 1] || 'step' + currentStep,
+                txHash: txHash,
+                time: timeTaken
+              };
+              if (existingIdx >= 0) {
+                data[blockKey].transactions[existingIdx] = txData;
+              } else {
+                data[blockKey].transactions.push(txData);
+              }
+              fs.writeFileSync(VERIFICATIONS_FILE, JSON.stringify(data, null, 2));
+              console.log('[DATA] Saved TX ' + currentStep + ' for block ' + targetHeight);
+            }
+          } catch (e) {
+            console.error('[DATA] Error saving TX:', e.message);
+          }
+          
           updateTxWithRealFee(targetHeight, txHash, currentStep).then(feeData => {
             if (feeData) {
               broadcast({ type: 'fee_update', height: targetHeight, step: currentStep, fee: feeData });
