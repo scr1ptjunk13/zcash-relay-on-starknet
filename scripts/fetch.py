@@ -24,11 +24,22 @@ def rpc_call(method: str, params: list) -> dict:
     auth = ("", RPC_KEY) if RPC_KEY else None
     payload = {"jsonrpc": "2.0", "method": method, "params": params, "id": 0}
     
-    response = requests.post(RPC_URL, json=payload, auth=auth, timeout=10)
-    result = response.json()
+    try:
+        response = requests.post(RPC_URL, json=payload, auth=auth, timeout=30)
+        response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        raise Exception(f"RPC Request failed: {e}")
+    
+    try:
+        result = response.json()
+    except Exception as e:
+        raise Exception(f"RPC returned invalid JSON: {response.text[:200]}")
     
     if result.get("error"):
         raise Exception(f"RPC Error: {result['error']}")
+    
+    if "result" not in result:
+        raise Exception(f"RPC response missing 'result': {result}")
     
     return result["result"]
 
