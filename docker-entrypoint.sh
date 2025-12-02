@@ -30,10 +30,6 @@ cat > /root/.starknet_accounts/starknet_open_zeppelin_accounts.json << EOF
 }
 EOF
 
-# Debug: show account file content
-echo "Account file created:"
-cat /root/.starknet_accounts/starknet_open_zeppelin_accounts.json
-
 echo "Environment configured successfully"
 echo "Starting Z.U.L.U. backend..."
 

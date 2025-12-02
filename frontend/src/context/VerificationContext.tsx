@@ -69,10 +69,17 @@ export function VerificationProvider({ children }: { children: ReactNode }) {
   const reconnectRef = useRef<NodeJS.Timeout | null>(null);
 
   const addLog = (text: string, type: LogLine["type"] = "info") => {
-    setState(prev => ({
-      ...prev,
-      logs: [...prev.logs, { timestamp: getTimestamp(), text, type }]
-    }));
+    setState(prev => {
+      // Deduplicate - skip if last log has same text
+      const lastLog = prev.logs[prev.logs.length - 1];
+      if (lastLog && lastLog.text === text) {
+        return prev;
+      }
+      return {
+        ...prev,
+        logs: [...prev.logs, { timestamp: getTimestamp(), text, type }]
+      };
+    });
   };
 
   const connectWebSocket = () => {
