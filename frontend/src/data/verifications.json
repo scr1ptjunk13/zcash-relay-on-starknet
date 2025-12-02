@@ -453,70 +453,93 @@
         "step": 1,
         "name": "start",
         "txHash": "0x033f0ce02a3f176c901367c53e61d99fcfee2b3ccc2f464e6ad656efc463b8e8",
-        "time": 6
+        "time": 6,
+        "actualFee": 2.034636481117759,
+        "actualFeeRaw": "2034636481117758720"
       },
       {
         "step": 2,
         "name": "batch[0]",
         "txHash": "0x039f4dad4dcdbc243a6a7dfdcc1c23734e065b313b9b2c6cbd4b216663034a00",
-        "time": 5
+        "time": 5,
+        "actualFee": 1.3993075206943002,
+        "actualFeeRaw": "1399307520694300128"
       },
       {
         "step": 3,
         "name": "batch[1]",
         "txHash": "0x05580db3aaa04cff4fe4bc6d32087f6702deb6483a63da9b3a32db8dcb1e4669",
-        "time": 5
+        "time": 5,
+        "actualFee": 1.3993075206935837,
+        "actualFeeRaw": "1399307520693583616"
       },
       {
         "step": 4,
         "name": "batch[2]",
         "txHash": "0x0580fa9cad32e0f3745cf556e18343472e954ad9fa8714e0aabdb571c4286fa2",
-        "time": 6
+        "time": 6,
+        "actualFee": 1.3993075206935837,
+        "actualFeeRaw": "1399307520693583616"
       },
       {
         "step": 5,
         "name": "batch[3]",
         "txHash": "0x0523a214bb4282618dd9483d2a4c290a63fbbfad869a10785feac8c9b9d60d56",
-        "time": 21
+        "time": 21,
+        "actualFee": 1.3993075206935837,
+        "actualFeeRaw": "1399307520693583616"
       },
       {
         "step": 6,
         "name": "batch[4]",
         "txHash": "0x0523572e3d6a36593ab20e1c2a4d5519c6702ef788acb50d86b83379f6033337",
-        "time": 10
+        "time": 10,
+        "actualFee": 1.3993075206935837,
+        "actualFeeRaw": "1399307520693583616"
       },
       {
         "step": 7,
         "name": "batch[5]",
         "txHash": "0x05e8df2a04c16bae70bd80ea61a9ab21294bb469042980ad09bee77b5bf1bbb5",
-        "time": 11
+        "time": 11,
+        "actualFee": 1.3993075206935837,
+        "actualFeeRaw": "1399307520693583616"
       },
       {
         "step": 8,
         "name": "batch[6]",
         "txHash": "0x0616a53c654a254995f415e43e8eadf82d67c15b45bc952c0d0b81173cd75f68",
-        "time": 6
+        "time": 6,
+        "actualFee": 1.3993075206935837,
+        "actualFeeRaw": "1399307520693583616"
       },
       {
         "step": 9,
         "name": "batch[7]",
         "txHash": "0x024a38b0ad8c973e2621cc7bdc3d8a8f0817ae1ffcf721a8f3bfbe58cc811484",
-        "time": 6
+        "time": 6,
+        "actualFee": 1.3993075206935837,
+        "actualFeeRaw": "1399307520693583616"
       },
       {
         "step": 10,
         "name": "tree",
         "txHash": "0x05cfb2317b27660f124cbc7cd6dcd68c00c93f189b471ce4de4cd6155c24b5fb",
-        "time": 7
+        "time": 7,
+        "actualFee": 1.9196121600064486,
+        "actualFeeRaw": "1919612160006448608"
       },
       {
         "step": 11,
         "name": "finalize",
         "txHash": "0x00660c1b2db95cf27c699b845181a1d639c5a7525a820f9ad6095462117e5ee0",
-        "time": 6
+        "time": 6,
+        "actualFee": 0.08437152003869165,
+        "actualFeeRaw": "84371520038691648"
       }
     ],
-    "verification_id": "0x0ab1fcee2ef969e2a09e2b3980b0b3ba5ec9157554482643d22acb9d"
+    "verification_id": "0x0ab1fcee2ef969e2a09e2b3980b0b3ba5ec9157554482643d22acb9d",
+    "totalFee": 15.233080326712281
   },
   "block_6": {
     "transactions": [
@@ -1342,5 +1365,335 @@
     ],
     "verification_id": "0xaf1ee7fb54479970a8de651437a08cdc5dce3a2d916b89a93c6a8844",
     "totalFee": 15.233080333311209
+  },
+  "block_16": {
+    "transactions": [
+      {
+        "step": 1,
+        "name": "start",
+        "txHash": "0x053959127959c45ebcee6cf266b53ad5f178da19ddbcf5c81d3d7822105fffc5",
+        "time": 9
+      },
+      {
+        "step": 2,
+        "name": "batch[0]",
+        "txHash": "0x051546eb4c2153ca282aa3258dbe7396a728b4c7ce2451651cf3315b2e5c5fcb",
+        "time": 9
+      },
+      {
+        "step": 3,
+        "name": "batch[1]",
+        "txHash": "0x0411310a72675f47a65c261362e6496ab8a3a5a59e4b28ca425624442d508763",
+        "time": 6
+      },
+      {
+        "step": 4,
+        "name": "batch[2]",
+        "txHash": "0x02186510b789dbeaf0d3ee43a1017a73dfbf5174c640254851a95edf45482ac9",
+        "time": 39
+      },
+      {
+        "step": 5,
+        "name": "batch[3]",
+        "txHash": "0x03df4a4036d691da8e46089e0cb83985a06bdfd9f874a3cbbccb0fd076661443",
+        "time": 7
+      },
+      {
+        "step": 6,
+        "name": "batch[4]",
+        "txHash": "0x0565a9c6631b5904593046cba0dc6b50d380befeb1b7d86ea78aa25c4eefbd31",
+        "time": 6
+      },
+      {
+        "step": 7,
+        "name": "batch[5]",
+        "txHash": "0x0788f2963cc75b686256e9b7dc07ecf9d2bc1bba4e0617c2832c14d999e547dc",
+        "time": 26
+      },
+      {
+        "step": 8,
+        "name": "batch[6]",
+        "txHash": "0x02b3704479ebc2bccf9da14b28d41f007099284f4b47238bfac390094d1f3b35",
+        "time": 17
+      },
+      {
+        "step": 9,
+        "name": "batch[7]",
+        "txHash": "0x032f138ca9cb49e5a2ec4e0c8c11615cf61ae7ff40fffaba8c824446aa5aa566",
+        "time": 19
+      },
+      {
+        "step": 10,
+        "name": "tree",
+        "txHash": "0x035a27b20142be533994c95e365b1c9485b70013e1f5d64155f919c73a0b6886",
+        "time": 7
+      },
+      {
+        "step": 11,
+        "name": "finalize",
+        "txHash": "0x0228d093487917174d519f061b07cdac731138b3ac156cb6663af7b32169a961",
+        "time": 25
+      }
+    ],
+    "verification_id": "0x362c8d51d26a94db79f08c31dd5b4b0f2100297be5d64380af0fe646"
+  },
+  "block_17": {
+    "transactions": [
+      {
+        "step": 1,
+        "name": "start",
+        "txHash": "0x000691999182c13af4ff6efe15f694b53bf9cbaa2ca4357883866947fb49a43c",
+        "time": 16,
+        "actualFee": 2.034636481080069,
+        "actualFeeRaw": "2034636481080069120"
+      },
+      {
+        "step": 2,
+        "name": "batch[0]",
+        "txHash": "0x04f1f73f64376777469b79ff23c302de3315fb8fb8649e3139bba7f05e9e5e49",
+        "time": 7,
+        "actualFee": 1.399307520670889,
+        "actualFeeRaw": "1399307520670889088"
+      },
+      {
+        "step": 3,
+        "name": "batch[1]",
+        "txHash": "0x02464d04d65bda9b24f7f8b1eff32005af099a80c355263c093debe81ffa496f",
+        "time": 20,
+        "actualFee": 1.3993075206701968,
+        "actualFeeRaw": "1399307520670196736"
+      },
+      {
+        "step": 4,
+        "name": "batch[2]",
+        "txHash": "0x0434f8eec49c2e67fb3aaefd4498df7c5df934d10a18fa18a6b58243c1990d74",
+        "time": 8,
+        "actualFee": 1.3993075206701968,
+        "actualFeeRaw": "1399307520670196736"
+      },
+      {
+        "step": 5,
+        "name": "batch[3]",
+        "txHash": "0x02ae449984e80b92d88d405f9f1ae8f032b28d1165baa71534e6ee3865bd98b4",
+        "time": 6,
+        "actualFee": 1.3993075206701968,
+        "actualFeeRaw": "1399307520670196736"
+      },
+      {
+        "step": 6,
+        "name": "batch[4]",
+        "txHash": "0x04ce4cbb4311cdd0a88bc6da797c2c9c41d2fb60efb3aa563912fdcd491913ff",
+        "time": 17,
+        "actualFee": 1.3993075206701968,
+        "actualFeeRaw": "1399307520670196736"
+      },
+      {
+        "step": 7,
+        "name": "batch[5]",
+        "txHash": "0x01988064eb43233bd4ed5b7534c1ebd9501ddf7b3cdfefe8bdd27db1cc577783",
+        "time": 14,
+        "actualFee": 1.3993075206701968,
+        "actualFeeRaw": "1399307520670196736"
+      },
+      {
+        "step": 8,
+        "name": "batch[6]",
+        "txHash": "0x07fdb557ec131a52e6420c36f7a7a70cae9da122221b81af7c403ae1b758dce1",
+        "time": 13,
+        "actualFee": 1.3993075206701968,
+        "actualFeeRaw": "1399307520670196736"
+      },
+      {
+        "step": 9,
+        "name": "batch[7]",
+        "txHash": "0x02aef176a70097155b2a0cc672e1d2fcd4088260f4f639c184337214ae8abf02",
+        "time": 23,
+        "actualFee": 1.3993075206701968,
+        "actualFeeRaw": "1399307520670196736"
+      },
+      {
+        "step": 10,
+        "name": "tree",
+        "txHash": "0x03b612c94f22b20ba4fb72a62e48417c8601f9ff00be08074c54de4f7da80c34",
+        "time": 28,
+        "actualFee": 1.919612160006231,
+        "actualFeeRaw": "1919612160006231168"
+      },
+      {
+        "step": 11,
+        "name": "finalize",
+        "txHash": "0x0303544b2a84d5c7d2e782ebc14c6a394f9ebcc82d1c67fd4bd890e587caaecf",
+        "time": 11,
+        "actualFee": 0.084371520037387,
+        "actualFeeRaw": "84371520037387008"
+      }
+    ],
+    "verification_id": "0xd42a53038f3c52ff65bd7520f77428bca09af5105e9712dd8040e81f",
+    "totalFee": 15.233080326485954
+  },
+  "block_18": {
+    "transactions": [
+      {
+        "step": 1,
+        "name": "start",
+        "txHash": "0x0068a8e3524b41e41ce70a701e8a959975a2500a8d902ece9fa50a2e2a19665e",
+        "time": 5
+      },
+      {
+        "step": 2,
+        "name": "batch[0]",
+        "txHash": "0x063902255e991f288b76474fc132854b3757fc899b2bbfb118da456a648c89ef",
+        "time": 6
+      },
+      {
+        "step": 3,
+        "name": "batch[1]",
+        "txHash": "0x029696c89857a217286020056f6a39bca1375ba1cd0b4860ab8d3dd06606e1f8",
+        "time": 5
+      },
+      {
+        "step": 4,
+        "name": "batch[2]",
+        "txHash": "0x020a93d513ee8020d106afcf79217eb202141ede4490b492d9fd2658ed1d74c9",
+        "time": 6
+      },
+      {
+        "step": 5,
+        "name": "batch[3]",
+        "txHash": "0x055ed7f4884dfe447d6a67db9670869ac0c0271bab60befd3f4968c63d1d77fc",
+        "time": 5
+      },
+      {
+        "step": 6,
+        "name": "batch[4]",
+        "txHash": "0x018d20956fedcca0c04f9be18814d0539bb1338b8715f6259bdcc1f99466ae2f",
+        "time": 6
+      },
+      {
+        "step": 7,
+        "name": "batch[5]",
+        "txHash": "0x0153a16e33d59298647bf3610c1431f0136d04b35e327c9441c44cf26fcb358a",
+        "time": 6
+      },
+      {
+        "step": 8,
+        "name": "batch[6]",
+        "txHash": "0x02a8aae267c5dd63918d91e15b79c2779840c55d9421203f1277641f0558e319",
+        "time": 6
+      },
+      {
+        "step": 9,
+        "name": "batch[7]",
+        "txHash": "0x0167d27b77eaa0045a22cae14513ac921ccf331c567c12f0ada2ae42958d1b87",
+        "time": 6
+      },
+      {
+        "step": 10,
+        "name": "tree",
+        "txHash": "0x034638c9e8002c63f960662497c15be412245646dd5214120f946824b460784e",
+        "time": 6
+      },
+      {
+        "step": 11,
+        "name": "finalize",
+        "txHash": "0x00f62a6725e6869929c8a9aba74e4a6a027875a2e78fdc3ee1bad3d234dae219",
+        "time": 5
+      }
+    ],
+    "verification_id": "0x18e40ac5ede5756ec13eb660f642b9b77e949790d0f0396922e8d889"
+  },
+  "block_19": {
+    "transactions": [
+      {
+        "step": 1,
+        "name": "start",
+        "txHash": "0x029eb443a16d25e6e4ce14f700f3662583c1961905914b08aadc7c6198b6f371",
+        "time": 7,
+        "actualFee": 2.0346364810811672,
+        "actualFeeRaw": "2034636481081167360"
+      },
+      {
+        "step": 2,
+        "name": "batch[0]",
+        "txHash": "0x001599b76541bf80d85c75afbb0bd8a3f70a9b5cfc4d0661f88a93ec2ed2f7b9",
+        "time": 5,
+        "actualFee": 1.3993075206715713,
+        "actualFeeRaw": "1399307520671571264"
+      },
+      {
+        "step": 3,
+        "name": "batch[1]",
+        "txHash": "0x04577b24ba723700650b3b0ba178e24683a66fe7d1990d29439ca8f54307c264",
+        "time": 6,
+        "actualFee": 1.3993075206708783,
+        "actualFeeRaw": "1399307520670878208"
+      },
+      {
+        "step": 4,
+        "name": "batch[2]",
+        "txHash": "0x046e05913dbd6a3d45e6047079d8cf3d8fcf10b46e99de2322d428dc2c574ad3",
+        "time": 5,
+        "actualFee": 1.3993075206708783,
+        "actualFeeRaw": "1399307520670878208"
+      },
+      {
+        "step": 5,
+        "name": "batch[3]",
+        "txHash": "0x06222e10edc87eaaca755b0883fc79ca96a0353d23ae6f2eeea8ae34480e59b5",
+        "time": 5,
+        "actualFee": 1.3993075206708783,
+        "actualFeeRaw": "1399307520670878208"
+      },
+      {
+        "step": 6,
+        "name": "batch[4]",
+        "txHash": "0x0394fdfd50b275814038c0af9d81f49093c7da1b83adc12f2e55b38315f64297",
+        "time": 18,
+        "actualFee": 1.3993075206708783,
+        "actualFeeRaw": "1399307520670878208"
+      },
+      {
+        "step": 7,
+        "name": "batch[5]",
+        "txHash": "0x013ae418da32cdc5ed62309cd1288b90f2a8ab2796176e37d53ae3ddaa68cf68",
+        "time": 6,
+        "actualFee": 1.3993075206708783,
+        "actualFeeRaw": "1399307520670878208"
+      },
+      {
+        "step": 8,
+        "name": "batch[6]",
+        "txHash": "0x069c08600f4f11eed1bb646e51cdfe2a576092bd042c3f4bb6b4158a7f82b67e",
+        "time": 5,
+        "actualFee": 1.3993075206708783,
+        "actualFeeRaw": "1399307520670878208"
+      },
+      {
+        "step": 9,
+        "name": "batch[7]",
+        "txHash": "0x06b2fb41f24b21d235f63352c836c01d49cbff432382930e755e3c990d642ed7",
+        "time": 6,
+        "actualFee": 1.3993075206708783,
+        "actualFeeRaw": "1399307520670878208"
+      },
+      {
+        "step": 10,
+        "name": "tree",
+        "txHash": "0x06cdb32785652448389ad9391bee313057ee7e822fdda6031457b7db087b4fb6",
+        "time": 6,
+        "actualFee": 1.9196121600062375,
+        "actualFeeRaw": "1919612160006237504"
+      },
+      {
+        "step": 11,
+        "name": "finalize",
+        "txHash": "0x07480f34aff016cca2571c92d5652078dc4563d710b914f56c6518d5f84855d4",
+        "time": 6,
+        "actualFee": 0.08437152003742503,
+        "actualFeeRaw": "84371520037425024"
+      }
+    ],
+    "verification_id": "0x700a475d7400ac8b9601928e07ada57a6d18bf4c601fdadf16c7b413",
+    "totalFee": 15.233080326492548
   }
 }
