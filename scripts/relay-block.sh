@@ -154,6 +154,7 @@ invoke() {
     done
     
     echo -e "${RED}[TX $step/$TOTAL_TXS]${NC} $desc ${RED}FAILED${NC}"
+    echo -e "${RED}[SNCAST]${NC} $output"
     return 1
 }
 
@@ -270,6 +271,16 @@ echo ""
 echo -e "${BOLD}${CYAN}ZCASH RELAY${NC}"
 echo -e "${DIM}Target: Block $TARGET | Network: sepolia${NC}"
 echo -e "${DIM}Contract: ${CONTRACT:0:10}...${CONTRACT: -8}${NC}"
+
+# Verify sncast account is accessible
+echo -e "${BLUE}[CHECK]${NC} Verifying account..."
+ACCOUNT_CHECK=$(sncast account list 2>&1)
+if ! echo "$ACCOUNT_CHECK" | grep -q "testnet_account"; then
+    echo -e "${RED}[ERROR]${NC} Account 'testnet_account' not found!"
+    echo -e "${RED}[ERROR]${NC} sncast output: $ACCOUNT_CHECK"
+    exit 1
+fi
+echo -e "${GREEN}[CHECK]${NC} Account found"
 
 # Get current chain height
 echo -e "${BLUE}[CHECK]${NC} Getting current chain height..."
