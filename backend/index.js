@@ -154,13 +154,19 @@ function runVerification(targetHeight) {
     const projectRoot = path.join(__dirname, '..');
     console.log('[VERIFY] Starting block ' + targetHeight);
     
-    const cmd = 'source ' + projectRoot + '/venv/bin/activate && ' + RELAY_SCRIPT + ' ' + targetHeight;
+    // Check if venv exists (local dev) or use system python (Docker)
+    const venvPath = path.join(projectRoot, 'venv/bin/activate');
+    const hasVenv = fs.existsSync(venvPath);
+    const cmd = hasVenv 
+      ? 'source ' + venvPath + ' && ' + RELAY_SCRIPT + ' ' + targetHeight
+      : RELAY_SCRIPT + ' ' + targetHeight;
+    
     const childProcess = spawn('bash', ['-c', cmd], {
       cwd: projectRoot,
       env: { 
         ...process.env,
-        PATH: projectRoot + '/venv/bin:' + process.env.PATH,
-        VIRTUAL_ENV: projectRoot + '/venv'
+        PATH: hasVenv ? projectRoot + '/venv/bin:' + process.env.PATH : process.env.PATH,
+        VIRTUAL_ENV: hasVenv ? projectRoot + '/venv' : ''
       }
     });
     
