@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useStarknet } from "@/lib/starknet";
 import { RelayStats, formatPow } from "@/lib/starknet/types";
 
-const BACKEND_URL = "http://localhost:3001";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
 
 // Fetch average cost from real verification data
 async function fetchAverageCost(): Promise<string> {

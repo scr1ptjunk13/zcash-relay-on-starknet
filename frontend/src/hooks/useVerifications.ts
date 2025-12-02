@@ -30,7 +30,7 @@ export interface BlockVerification {
 }
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
-const WS_URL = BACKEND_URL.replace(/^http/, 'ws');
+const WS_URL = BACKEND_URL.replace(/^https:/, 'wss:').replace(/^http:/, 'ws:');
 
 // Get verification data for a specific block (from backend API for real-time data)
 export function useBlockVerification(height: number | undefined) {

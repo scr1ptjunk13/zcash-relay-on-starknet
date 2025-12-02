@@ -1,7 +1,8 @@
 import { createContext, useContext, useState, useEffect, useRef, ReactNode } from "react";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
-const WS_URL = BACKEND_URL.replace(/^http/, 'ws');
+// Convert http(s) to ws(s) properly
+const WS_URL = BACKEND_URL.replace(/^https:/, 'wss:').replace(/^http:/, 'ws:');
 
 // Strip ANSI color codes from terminal output
 const stripAnsi = (str: string) => str.replace(/\x1b\[[0-9;]*m/g, '');
