@@ -170,9 +170,11 @@ relay_single_block() {
     
     # Fetch block data
     echo -e "${BLUE}[FETCH]${NC} Fetching from Zcash..."
-    HEADER=$(python scripts/format-block-calldata.py $BLOCK -v 2>/dev/null)
-    if [ -z "$HEADER" ]; then
+    HEADER=$(python3 scripts/format-block-calldata.py $BLOCK -v 2>&1)
+    FETCH_EXIT=$?
+    if [ $FETCH_EXIT -ne 0 ] || [ -z "$HEADER" ]; then
         echo -e "${RED}[ERROR]${NC} Failed to fetch block data"
+        echo -e "${RED}[ERROR]${NC} Python output: $HEADER"
         return 1
     fi
     
