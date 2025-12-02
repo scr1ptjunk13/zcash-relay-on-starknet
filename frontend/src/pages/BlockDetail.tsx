@@ -211,6 +211,13 @@ function VerificationTimeline({ height, explorerUrl }: { height: number; explore
     <Card className="p-6 bg-card border-border">
       <h2 className="text-xl font-semibold mb-6">Verification Timeline</h2>
       
+      {verification.transactions.length === 0 && (
+        <div className="text-muted-foreground mb-4 p-3 border border-border/50 rounded">
+          <p>This block was verified on-chain but detailed transaction timeline was not recorded.</p>
+          <p className="text-sm mt-1">New verifications will show full timeline data.</p>
+        </div>
+      )}
+      
       <div className="space-y-3">
         {verification.transactions.map((tx, idx) => (
           <div

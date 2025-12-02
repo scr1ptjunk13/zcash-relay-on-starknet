@@ -17,7 +17,8 @@ const Blocks = () => {
   
   const { isConfigured } = useStarknet();
   const { data: chainHeight } = useChainHeight();
-  const { data: blocks, isLoading } = useRecentBlocks(BLOCKS_PER_PAGE);
+  const offset = page * BLOCKS_PER_PAGE;
+  const { data: blocks, isLoading } = useRecentBlocks(BLOCKS_PER_PAGE, offset);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,10 +27,10 @@ const Blocks = () => {
     }
   };
 
-  const totalBlocks = chainHeight || 0;
-  const startBlock = page * BLOCKS_PER_PAGE + 1;
-  const endBlock = Math.min(startBlock + BLOCKS_PER_PAGE - 1, totalBlocks);
-  const hasNextPage = endBlock < totalBlocks;
+  const totalBlocks = (chainHeight || 0) + 1; // +1 because we have block 0
+  const displayStart = offset + 1;
+  const displayEnd = Math.min(offset + BLOCKS_PER_PAGE, totalBlocks);
+  const hasNextPage = offset + BLOCKS_PER_PAGE < totalBlocks;
   const hasPrevPage = page > 0;
 
   return (
@@ -101,7 +102,7 @@ const Blocks = () => {
         {blocks && blocks.length > 0 && (
           <div className="mt-8 flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
-              Showing {startBlock}-{endBlock} of {totalBlocks.toLocaleString()} blocks
+              Showing {displayStart}-{displayEnd} of {totalBlocks} blocks
             </p>
             <div className="flex gap-2">
               <Button

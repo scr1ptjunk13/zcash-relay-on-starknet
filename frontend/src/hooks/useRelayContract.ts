@@ -103,19 +103,19 @@ export function useCumulativePow(height: number | undefined, maxDepth: number = 
 }
 
 // Fetch multiple recent blocks - PARALLEL version for speed
-export function useRecentBlocks(count: number = 5) {
+export function useRecentBlocks(count: number = 5, offset: number = 0) {
   const { contract, isConfigured } = useStarknet();
   const { data: currentHeight } = useChainHeight();
 
   return useQuery({
-    queryKey: ["recentBlocks", currentHeight, count],
+    queryKey: ["recentBlocks", currentHeight, count, offset],
     queryFn: async (): Promise<BlockInfo[]> => {
       if (!contract || currentHeight === undefined) {
         throw new Error("Contract not ready");
       }
 
-      const startHeight = currentHeight;
-      const endHeight = Math.max(0, currentHeight - count + 1);
+      const startHeight = currentHeight - offset;
+      const endHeight = Math.max(0, startHeight - count + 1);
       const heights = [];
       for (let h = startHeight; h >= endHeight; h--) heights.push(h);
 
