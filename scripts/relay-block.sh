@@ -336,5 +336,5 @@ SECS=$((ELAPSED % 60))
 echo ""
 echo -e "${GREEN}${BOLD}SUCCESS${NC} Relayed $BLOCKS_DONE blocks (up to #$TARGET)"
 echo -e "${DIM}Total time: ${MINS}m ${SECS}s${NC}"
-echo -e "${DIM}https://sepolia.starkscan.co/contract/$CONTRACT${NC}"
+echo -e "${DIM}https://sepolia.voyager.online/contract/$CONTRACT${NC}"
 echo ""

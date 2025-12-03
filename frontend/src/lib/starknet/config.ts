@@ -5,7 +5,7 @@ export const STARKNET_CONFIG = {
   // Sepolia testnet - Alchemy RPC
   rpcUrl: import.meta.env.VITE_STARKNET_RPC_URL || "https://starknet-sepolia.g.alchemy.com/starknet/version/rpc/v0_7/naxSdrGgMqQsiau6LBVoB",
   chainId: "SN_SEPOLIA" as const,
-  explorerUrl: "https://sepolia.starkscan.co",
+  explorerUrl: "https://sepolia.voyager.online",
   
   // Contract address - UPDATE THIS after deployment
   contractAddress: import.meta.env.VITE_RELAY_CONTRACT_ADDRESS || "",

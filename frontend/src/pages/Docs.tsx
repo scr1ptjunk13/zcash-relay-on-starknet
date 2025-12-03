@@ -134,7 +134,7 @@ python scripts/get-block-txs.py 6`}</code>
                       rel="noopener noreferrer"
                       className="text-primary hover:text-primary/80 flex items-center gap-1 text-sm"
                     >
-                      View on Starkscan <ExternalLink className="w-3 h-3" />
+                      View on Voyager <ExternalLink className="w-3 h-3" />
                     </a>
                   )}
                 </div>

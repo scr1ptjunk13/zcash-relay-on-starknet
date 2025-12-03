@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Populate verification TX hashes for existing blocks.
-Run this script and paste TX hashes from Starkscan.
+Run this script and paste TX hashes from Voyager.
 
 Usage:
   python scripts/populate-existing-txs.py
@@ -61,8 +61,8 @@ def main():
     print("Populate Verification TX Hashes")
     print("=" * 50)
     print()
-    print("Get TX hashes from Starkscan:")
-    print("https://sepolia.starkscan.co/contract/0x0546f738f87885a936cb8df8085b4b3fdc9bf1be6449cf5f9967c4a5892a12dc#transactions")
+    print("Get TX hashes from Voyager:")
+    print("https://sepolia.voyager.online/contract/0x0546f738f87885a936cb8df8085b4b3fdc9bf1be6449cf5f9967c4a5892a12dc#transactions")
     print()
     
     while True:
@@ -79,7 +79,7 @@ def main():
         vid = input(f"  Verification ID for block {block_num} (or press Enter to skip): ").strip()
         
         print(f"  Enter 11 TX hashes for block {block_num}, one per line:")
-        print(f"  (Copy from Starkscan, oldest to newest for this block)")
+        print(f"  (Copy from Voyager, oldest to newest for this block)")
         
         tx_hashes = []
         for i in range(11):
