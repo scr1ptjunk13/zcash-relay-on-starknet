@@ -207,10 +207,11 @@ function runVerification(targetHeight) {
     
     let currentStep = 0;
     let lastTxTime = Date.now();
+    let currentBlockHeight = targetHeight; // Track actual block being processed (relay may process multiple)
     const stepNames = ['start', 'batch[0]', 'batch[1]', 'batch[2]', 'batch[3]', 'batch[4]', 'batch[5]', 'batch[6]', 'batch[7]', 'tree', 'finalize'];
     
     // Initialize block entry in verifications file
-    const blockKey = 'block_' + targetHeight;
+    let blockKey = 'block_' + currentBlockHeight;
     try {
       const data = JSON.parse(fs.readFileSync(VERIFICATIONS_FILE, 'utf8'));
       if (!data[blockKey]) {
@@ -239,6 +240,25 @@ function runVerification(targetHeight) {
         const fullHashMatch = line.match(/^TXHASH:(0x[a-f0-9]{64})$/i);
         const vidMatch = line.match(/\[FETCH\] VID: (0x[a-f0-9]+)/i);
         const timeMatch = line.match(/\((\d+)s\)/);
+        // Detect when relay starts processing a new block
+        const blockStartMatch = line.match(/^Block (\d+)$/);
+        
+        // Update current block when a new one starts
+        if (blockStartMatch) {
+          currentBlockHeight = parseInt(blockStartMatch[1]);
+          blockKey = 'block_' + currentBlockHeight;
+          currentStep = 0;
+          console.log('[DATA] Now tracking block ' + currentBlockHeight);
+          // Initialize entry for this block
+          try {
+            const data = JSON.parse(fs.readFileSync(VERIFICATIONS_FILE, 'utf8'));
+            if (!data[blockKey]) {
+              data[blockKey] = { transactions: [], verification_id: null };
+              fs.writeFileSync(VERIFICATIONS_FILE, JSON.stringify(data, null, 2));
+              console.log('[DATA] Created entry for block ' + currentBlockHeight);
+            }
+          } catch (e) {}
+        }
         
         if (txMatch) {
           currentStep = parseInt(txMatch[1]);
@@ -247,7 +267,7 @@ function runVerification(targetHeight) {
         }
         
         // Broadcast ALL output lines, not just TX lines
-        broadcast({ type: 'progress', height: targetHeight, step: currentStep, output: line });
+        broadcast({ type: 'progress', height: currentBlockHeight, step: currentStep, output: line });
         
         // Save VID to file
         if (vidMatch) {
@@ -256,7 +276,7 @@ function runVerification(targetHeight) {
             if (data[blockKey]) {
               data[blockKey].verification_id = vidMatch[1];
               fs.writeFileSync(VERIFICATIONS_FILE, JSON.stringify(data, null, 2));
-              console.log('[DATA] Saved VID for block ' + targetHeight);
+              console.log('[DATA] Saved VID for block ' + currentBlockHeight);
             }
           } catch (e) {}
         }
@@ -285,15 +305,15 @@ function runVerification(targetHeight) {
                 data[blockKey].transactions.push(txData);
               }
               fs.writeFileSync(VERIFICATIONS_FILE, JSON.stringify(data, null, 2));
-              console.log('[DATA] Saved TX ' + currentStep + ' for block ' + targetHeight);
+              console.log('[DATA] Saved TX ' + currentStep + ' for block ' + currentBlockHeight);
             }
           } catch (e) {
             console.error('[DATA] Error saving TX:', e.message);
           }
           
-          updateTxWithRealFee(targetHeight, txHash, currentStep).then(feeData => {
+          updateTxWithRealFee(currentBlockHeight, txHash, currentStep).then(feeData => {
             if (feeData) {
-              broadcast({ type: 'fee_update', height: targetHeight, step: currentStep, fee: feeData });
+              broadcast({ type: 'fee_update', height: currentBlockHeight, step: currentStep, fee: feeData });
             }
           });
         }
